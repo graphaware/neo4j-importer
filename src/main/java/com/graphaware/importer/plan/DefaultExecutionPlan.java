@@ -119,13 +119,8 @@ public class DefaultExecutionPlan implements ExecutionPlan {
      */
     @Override
     public final boolean allFinished() {
-        LOG.info("Checking if all importers finished...");
-
         for (Importer importer : importers) {
-            LOG.info("Importer " + importer.name() + " is " + importer.getState());
-
             if (hasNotFinished(importer)) {
-                LOG.info("There are unfinished importers.");
                 return false;
             }
         }

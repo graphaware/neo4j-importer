@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/graphaware/neo4j-importer.png)](https://travis-ci.org/graphaware/neo4j-importer)
+![Build Status](https://travis-ci.org/graphaware/neo4j-importer.png)](https://travis-ci.org/graphaware/neo4j-importer)
 
 Usage
 -----

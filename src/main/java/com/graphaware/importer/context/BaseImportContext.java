@@ -33,6 +33,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Bare-bones base-class for {@link ImportContext} implementations.
@@ -135,10 +138,23 @@ abstract class BaseImportContext implements ImportContext {
      */
     @Override
     public final void shutdown() {
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        executor.schedule(new Runnable() {
+            @Override
+            public void run() {
+                LOG.info("I am still alive!");
+            }
+        }, 1, TimeUnit.MINUTES);
+
         preShutdown();
+
         indexProvider().shutdown();
+
         inserter().shutdown();
+
         postShutdown();
+
+        executor.shutdownNow();
     }
 
     /**

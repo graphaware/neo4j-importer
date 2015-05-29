@@ -35,7 +35,7 @@ import java.util.Map;
 public class CacheAwareImportContext extends SimpleImportContext {
 
     private final DataLocator cacheInputLocator;
-    private final Map<String, CacheEntryMapper> cacheEntryMapper;
+    private final Map<String, CacheEntryMapper> cacheEntryMappers;
 
     /**
      * Create a new context.
@@ -45,14 +45,14 @@ public class CacheAwareImportContext extends SimpleImportContext {
      * @param inputLocator      component capable of locating input data.
      * @param outputLocator     component capable of locating (creating) output data.
      * @param cacheInputLocator component capable of locating cached input data. Must not be <code>null</code>.
-     * @param cacheEntryMapper  mapper for cached data as if they were columns. Must not be <code>null</code>.
+     * @param cacheEntryMappers  mapper for cached data as if they were columns. Must not be <code>null</code>.
      */
-    public CacheAwareImportContext(ImportConfig config, Caches caches, DataLocator inputLocator, DataLocator outputLocator, DataLocator cacheInputLocator, Map<String, CacheEntryMapper> cacheEntryMapper) {
+    public CacheAwareImportContext(ImportConfig config, Caches caches, DataLocator inputLocator, DataLocator outputLocator, DataLocator cacheInputLocator, Map<String, CacheEntryMapper> cacheEntryMappers) {
         super(config, caches, inputLocator, outputLocator);
         Assert.notNull(cacheInputLocator);
-        Assert.notNull(cacheEntryMapper);
+        Assert.notNull(cacheEntryMappers);
         this.cacheInputLocator = cacheInputLocator;
-        this.cacheEntryMapper = cacheEntryMapper;
+        this.cacheEntryMappers = cacheEntryMappers;
     }
 
     /**
@@ -61,11 +61,22 @@ public class CacheAwareImportContext extends SimpleImportContext {
     @Override
     protected DataReader doCreateReader(Data data) {
         if (cacheInputLocator.canLocate(data)) {
-            String dataName = cacheInputLocator.locate(data);
-            return new CacheDataReader(caches().getCache(dataName), cacheEntryMapper.get(dataName));
+            return new CacheDataReader(caches(), cacheEntryMappers);
         }
 
         return super.doCreateReader(data);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String locate(Data data) {
+        if (cacheInputLocator.canLocate(data)) {
+            return cacheInputLocator.locate(data);
+        }
+
+        return super.locate(data);
     }
 
     /**

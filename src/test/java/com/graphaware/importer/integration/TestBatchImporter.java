@@ -16,12 +16,16 @@
 package com.graphaware.importer.integration;
 
 import com.graphaware.importer.FileBatchImporter;
+import com.graphaware.importer.config.FileImportConfig;
+import com.graphaware.importer.context.CacheAwareImportContext;
+import com.graphaware.importer.context.ImportContext;
 import com.graphaware.importer.data.Data;
 import com.graphaware.importer.data.DynamicData;
+import com.graphaware.importer.data.access.CacheEntryMapper;
+import com.graphaware.importer.data.location.DataLocator;
+import com.graphaware.importer.data.location.SimpleDataLocator;
 import com.graphaware.importer.importer.Importer;
-import com.graphaware.importer.integration.inserter.FriendsImporter;
-import com.graphaware.importer.integration.inserter.LocationImporter;
-import com.graphaware.importer.integration.inserter.PersonImporter;
+import com.graphaware.importer.integration.inserter.*;
 
 import java.util.*;
 
@@ -36,23 +40,40 @@ public class TestBatchImporter extends FileBatchImporter {
         return new HashSet<>(Arrays.<Importer>asList(
                 new PersonImporter(),
                 new FriendsImporter(),
-                new LocationImporter()
+                new LocationImporter(),
+                new JobsImporter(),
+                new LastRoleImporter()
         ));
     }
 
     @Override
     protected Map<Data, String> input() {
-        return new HashMap<Data, String>() {{
-            put(DynamicData.withName("people"), "people");
-            put(DynamicData.withName("friends"), "friends");
-            put(DynamicData.withName("locations"), "locations");
-        }};
+        return DynamicData.oneToOne("people", "jobs", "friends", "locations");
     }
 
     @Override
-    protected Map<Data, String> output() {
-        return Collections.emptyMap();
+    protected ImportContext createContext(FileImportConfig config) {
+        return new CacheAwareImportContext(config, createCaches(), createInputDataLocator(config), createOutputDataLocator(config), createCacheInputLocator(), createMapper());
     }
 
+    private DataLocator createCacheInputLocator() {
+        return new SimpleDataLocator(Collections.singletonMap(DynamicData.withName("roles"), "roles"));
+    }
 
+    private Map<String, CacheEntryMapper> createMapper() {
+        return Collections.<String, CacheEntryMapper>singletonMap("roles", new CacheEntryMapper() {
+            @Override
+            public Object getValue(Map.Entry entry, String columnName) {
+                switch (columnName) {
+                    case "personId":
+                        return entry.getKey();
+                    case "position":
+                        String[] value = (String[]) entry.getValue();
+                        return value[0] + " at " + value[1];
+                    default:
+                        throw new IllegalStateException("Unknown column " + columnName);
+                }
+            }
+        });
+    }
 }

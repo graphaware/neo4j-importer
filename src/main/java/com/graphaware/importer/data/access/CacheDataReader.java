@@ -15,7 +15,7 @@
 
 package com.graphaware.importer.data.access;
 
-import com.graphaware.importer.cache.Cache;
+import com.graphaware.importer.cache.Caches;
 import org.springframework.util.Assert;
 
 import java.util.Iterator;
@@ -26,24 +26,25 @@ import java.util.Map;
  */
 public class CacheDataReader implements DataReader {
 
-    private final Cache cache;
-    private final CacheEntryMapper mapper;
+    private final Caches caches;
+    private final Map<String, CacheEntryMapper> mappers;
     private Iterator<Map.Entry> entryIterator;
     private Map.Entry entry;
+    private CacheEntryMapper mapper;
     private int entryNumber = 0;
 
     /**
      * Create a new reader.
      *
-     * @param cache  to read from. Must not be <code>null</code>.
-     * @param mapper of cached data to "columns". Must not be <code>null</code>.
+     * @param caches  to read from. Must not be <code>null</code>.
+     * @param mappers of cached data to "columns". Must not be <code>null</code>.
      */
-    public CacheDataReader(Cache cache, CacheEntryMapper mapper) {
-        Assert.notNull(cache);
-        Assert.notNull(mapper);
+    public CacheDataReader(Caches caches, Map<String, CacheEntryMapper> mappers) {
+        Assert.notNull(caches);
+        Assert.notNull(mappers);
 
-        this.cache = cache;
-        this.mapper = mapper;
+        this.caches = caches;
+        this.mappers = mappers;
     }
 
     /**
@@ -62,7 +63,8 @@ public class CacheDataReader implements DataReader {
         if (entryIterator != null || entry != null) {
             throw new IllegalStateException("Previous reader hasn't been closed");
         }
-        entryIterator = cache.entrySet().iterator();
+        entryIterator = caches.getCache(connectionString).entrySet().iterator();
+        mapper = mappers.get(connectionString);
     }
 
     /**

@@ -49,14 +49,20 @@ public class BatchImporterIntegrationTest {
         GraphDatabaseService database = new GraphDatabaseFactory().newEmbeddedDatabase(tmpFolder + "/graph.db");
 
         GraphUnit.assertSameGraph(database, "CREATE " +
-                        "(p1:Person {id: 1, name: 'Michal Bachman'})," +
-                        "(p2:Person {id: 2, name: 'Adam George'})," +
+                        "(p1:Person {id: 1, name: 'Michal Bachman', role: 'MD at GraphAware'})," +
+                        "(p2:Person {id: 2, name: 'Adam George', role: 'Consultant at GraphAware'})," +
                         "(l1:Location {id: 1, name: 'London'})," +
                         "(l2:Location {id: 2, name: 'Watnall'})," +
                         "(l3:Location {id: 3, name: 'Prague'})," +
+                        "(c1:Company {name: 'K+N'})," +
+                        "(c2:Company {name: 'GraphAware'})," +
                         "(p1)-[:LIVES_IN]->(l1)," +
                         "(p2)-[:LIVES_IN]->(l2)," +
-                        "(p1)-[:FRIEND_OF]->(p2)"
+                        "(p1)-[:FRIEND_OF]->(p2)," +
+                        "(p1)-[:WORKS_FOR {role: 'Developer'}]->(c1)," +
+                        "(p1)-[:WORKS_FOR {role: 'MD'}]->(c2)," +
+                        "(p2)-[:WORKS_FOR {role: 'Developer'}]->(c1)," +
+                        "(p2)-[:WORKS_FOR {role: 'Consultant'}]->(c2)"
         );
 
         database.shutdown();

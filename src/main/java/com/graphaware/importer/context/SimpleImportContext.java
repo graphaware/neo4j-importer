@@ -72,7 +72,7 @@ public class SimpleImportContext extends BaseImportContext {
 
         DataReader dataReader = doCreateReader(data);
         dataReader.initialize();
-        dataReader.read(inputLocator.locate(data), data.name());
+        dataReader.read(locate(data), data.name());
         return dataReader;
     }
 
@@ -84,6 +84,16 @@ public class SimpleImportContext extends BaseImportContext {
      */
     protected DataReader doCreateReader(Data data) {
         return config.createReader();
+    }
+
+    /**
+     * Locate data.
+     *
+     * @param data to locate.
+     * @return logical data location.
+     */
+    protected String locate(Data data) {
+        return inputLocator.locate(data);
     }
 
     /**

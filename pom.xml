@@ -28,6 +28,47 @@
 
     <name>GraphAware Programmatic Neo4j Importer</name>
     <description>Importer high-performance multi-threaded initial data load into Neo4j from CSV/SQL with custom logic</description>
+    <url>http://graphaware.com</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License, version 3</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git@github.com:graphaware/neo4j-importer.git</connection>
+        <developerConnection>scm:git:git@github.com:graphaware/neo4j-importer.git</developerConnection>
+        <url>git@github.com:graphaware/neo4j-importer.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>bachmanm</id>
+            <name>Michal Bachman</name>
+            <email>neo4j-importer@graphaware.com</email>
+        </developer>
+    </developers>
+
+    <ciManagement>
+        <url>https://travis-ci.org/graphaware/neo4j-importer</url>
+        <system>Travis CI</system>
+    </ciManagement>
+
+    <inceptionYear>2015</inceptionYear>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/graphaware/neo4j-importer/issues</url>
+    </issueManagement>
+
+    <organization>
+        <name>Graph Aware Limited</name>
+        <url>http://graphaware.com</url>
+    </organization>
 
     <dependencies>
 

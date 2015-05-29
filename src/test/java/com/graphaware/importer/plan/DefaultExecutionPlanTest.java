@@ -33,7 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -85,6 +85,72 @@ public class DefaultExecutionPlanTest {
         assertEquals("TEST4", result.get(0).name());
         assertEquals("TEST2", result.get(1).name());
         assertEquals("TEST1", result.get(2).name());
+    }
+
+    @Test
+    public void shouldCorrectlyJudgeWhenImporterCanRunAndWhenTheyAreFinished() {
+        TestImporter i1 = new TestImporter();
+        TestImporter2 i2 = new TestImporter2();
+        TestImporter4 i4 = new TestImporter4();
+
+        Set<Importer> importers = importers(i1, i2, i4);
+        ExecutionPlan plan = new DefaultExecutionPlan(importers, context);
+
+        assertFalse(plan.allFinished());
+        assertTrue(plan.canRun(i4));
+        assertFalse(plan.canRun(i1));
+        assertFalse(plan.canRun(i2));
+
+        try {
+            i4.prepare(context);
+        } catch (Exception e) {
+            //ok
+        }
+
+        try {
+            i4.performImport();
+        } catch (Exception e) {
+            //ok
+        }
+
+        try {
+            plan.canRun(i4);
+            fail();
+        } catch (IllegalStateException e) {
+            //ok
+        }
+
+        assertFalse(plan.allFinished());
+        assertFalse(plan.canRun(i1));
+        assertTrue(plan.canRun(i2));
+
+        try {
+            i2.prepare(context);
+        } catch (Exception e) {
+            //ok
+        }
+
+        try {
+            i2.performImport();
+        } catch (Exception e) {
+            //ok
+        }
+
+        assertFalse(plan.allFinished());
+
+        try {
+            i1.prepare(context);
+        } catch (Exception e) {
+            //ok
+        }
+
+        try {
+            i1.performImport();
+        } catch (Exception e) {
+            //ok
+        }
+
+        assertTrue(plan.allFinished());
     }
 
     private class TestImporter extends BaseImporter<Object> {

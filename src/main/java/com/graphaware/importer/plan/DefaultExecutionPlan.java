@@ -149,6 +149,10 @@ public class DefaultExecutionPlan implements ExecutionPlan {
      */
     @Override
     public final boolean canRun(Importer importer) {
+        if (importer.getState() != Importer.State.NOT_STARTED) {
+            throw new IllegalStateException("Importer " + importer.name() + " is already " + importer.getState() + "!");
+        }
+
         Set<Importer> remaining = new HashSet<>();
         for (Importer candidate : importers) {
             if (hasNotFinished(candidate)) {
@@ -160,8 +164,7 @@ public class DefaultExecutionPlan implements ExecutionPlan {
 
         if (result) {
             LOG.info("Importer " + importer.name() + " CAN run now.");
-        }
-        else {
+        } else {
             LOG.info("Importer " + importer.name() + " CANNOT run yet.");
         }
 

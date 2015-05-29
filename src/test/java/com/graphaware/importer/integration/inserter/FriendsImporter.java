@@ -21,11 +21,12 @@ import com.graphaware.importer.data.Data;
 import com.graphaware.importer.data.DynamicData;
 import com.graphaware.importer.data.access.DataReader;
 import com.graphaware.importer.importer.BaseImporter;
-import org.neo4j.graphdb.DynamicRelationshipType;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.neo4j.graphdb.DynamicRelationshipType.withName;
 
 public class FriendsImporter extends BaseImporter<Map<String, Object>> {
 
@@ -43,12 +44,17 @@ public class FriendsImporter extends BaseImporter<Map<String, Object>> {
 
         result.put("id1", record.readLong("id1"));
         result.put("id2", record.readLong("id2"));
+        result.put("since", record.readDate("since"));
 
         return result;
     }
 
     @Override
     public void processObject(Map<String, Object> object) {
-        context.inserter().createRelationship(personCache.get((long) object.get("id1")), personCache.get((long) object.get("id2")), DynamicRelationshipType.withName("FRIEND_OF"), Collections.<String, Object>emptyMap());
+        context.inserter().createRelationship(
+                personCache.get((long) object.get("id1")),
+                personCache.get((long) object.get("id2")),
+                withName("FRIEND_OF"),
+                Collections.singletonMap("since", object.get("since")));
     }
 }

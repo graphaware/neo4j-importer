@@ -98,16 +98,6 @@ public abstract class BatchImporter<T extends ImportConfig> {
 
             performImport(context, plan);
 
-//            LOG.info("Shutting down context...");
-//
-//            context.shutdown();
-//
-//            LOG.info("Context shut down.");
-//
-//            LOG.info("Bootstrapping essential context...");
-//
-//            context.essentialBootstrap();
-
             LOG.info("Creating indices...");
 
             createIndices(plan);

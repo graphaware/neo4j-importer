@@ -22,15 +22,15 @@ import com.graphaware.importer.data.Data;
 import com.graphaware.importer.data.DynamicData;
 import com.graphaware.importer.data.access.DataReader;
 import com.graphaware.importer.importer.BaseImporter;
-import org.neo4j.graphdb.DynamicRelationshipType;
+import com.graphaware.importer.integration.domain.Person;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.neo4j.graphdb.DynamicLabel.label;
+import static org.neo4j.graphdb.DynamicRelationshipType.withName;
 
-public class PersonImporter extends BaseImporter<Map<String, Object>> {
+public class PersonImporter extends BaseImporter<Person> {
 
     @InjectCache(name = "people", creator = true)
     private Cache<Long, Long> personCache;
@@ -44,23 +44,23 @@ public class PersonImporter extends BaseImporter<Map<String, Object>> {
     }
 
     @Override
-    public Map<String, Object> produceObject(DataReader record) {
-        Map<String, Object> result = new HashMap<>();
-
-        result.put("id", record.readLong("id"));
-        result.put("location", record.readLong("location"));
-        result.put("name", record.readString("name"));
-
-        return result;
+    public Person produceObject(DataReader record) {
+        //for testing purposes, let's say we can't construct a person without ID
+        if (record.readLong("id") == null) {
+            return null;
+        }
+        return new Person(record.readLong("id"), record.readString("name"), record.readInt("age"), record.readLong("location"));
     }
 
     @Override
-    public void processObject(Map<String, Object> object) {
-        Map<String, Object> props = new HashMap<>(object);
-        props.remove("location");
+    public void processObject(Person person) {
+        //for testing purposes, let's say people with empty names are invalid.
+        if (StringUtils.isEmpty(person.getName())) {
+            throw new RuntimeException("Person has empty name");
+        }
 
-        personCache.put((Long) object.get("id"), context.inserter().createNode(props, label("Person")));
-        context.inserter().createRelationship(personCache.get((long) object.get("id")), locationCache.get((long) object.get("location")), DynamicRelationshipType.withName("LIVES_IN"), Collections.<String, Object>emptyMap());
+        personCache.put(person.getId(), context.inserter().createNode(person.getProperties(), label("Person")));
+        context.inserter().createRelationship(personCache.get(person.getId()), locationCache.get(person.getLocation()), withName("LIVES_IN"), Collections.<String, Object>emptyMap());
     }
 
     @Override

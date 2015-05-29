@@ -55,6 +55,8 @@ public abstract class BatchImporter<T extends ImportConfig> {
 
     private final Object monitor = new Object();
 
+    private Set<Importer> importers;
+
     /**
      * Run this importer.
      *
@@ -88,7 +90,7 @@ public abstract class BatchImporter<T extends ImportConfig> {
 
             LOG.info("Creating importers...");
 
-            Set<Importer> importers = createImporters();
+            Set<Importer> importers = importers();
 
             LOG.info("Creating execution plan...");
 
@@ -178,6 +180,19 @@ public abstract class BatchImporter<T extends ImportConfig> {
      */
     protected StatisticsCollector createStats(ImportContext context) {
         return new LoggingStatisticsCollector("IMPORT");
+    }
+
+    /**
+     * Get a set of importers that will perform the import.
+     *
+     * @return importers.
+     */
+    protected final Set<Importer> importers() {
+        if (importers == null) {
+            importers = createImporters();
+        }
+
+        return importers;
     }
 
     /**

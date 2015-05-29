@@ -17,7 +17,6 @@ package com.graphaware.importer.importer;
 
 import com.graphaware.importer.cache.Caches;
 import com.graphaware.importer.context.ImportContext;
-import com.graphaware.importer.data.Data;
 import com.graphaware.importer.data.access.DataReader;
 import com.graphaware.importer.stats.StatisticsCollector;
 import com.graphaware.importer.util.BlockingArrayBlockingQueue;
@@ -230,13 +229,6 @@ public abstract class BaseImporter<T> implements Importer {
     protected boolean preProcess(T object, int row, String rawData) {
         return false;
     }
-
-    /**
-     * Get the data this inserter works with.
-     *
-     * @return input data.
-     */
-    public abstract Data inputData();
 
     /**
      * Produce the object (DTO) from the data record.

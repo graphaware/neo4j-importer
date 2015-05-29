@@ -16,6 +16,7 @@
 package com.graphaware.importer.importer;
 
 import com.graphaware.importer.context.ImportContext;
+import com.graphaware.importer.data.Data;
 
 /**
  * A component responsible for importing a single concern. Typically, a "concern" is a single file or SQL query.
@@ -38,6 +39,13 @@ public interface Importer {
      * @return importer name.
      */
     String name();
+
+    /**
+     * Get the data this importer works with.
+     *
+     * @return input data.
+     */
+    Data inputData();
 
     /**
      * Prepare this importer for populating the database. Guaranteed to be called before {@link #performImport()}.

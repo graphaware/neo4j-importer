@@ -19,10 +19,14 @@ import com.graphaware.importer.cli.CommandLineParser;
 import com.graphaware.importer.cli.CsvCommandLineParser;
 import com.graphaware.importer.config.FileImportConfig;
 import com.graphaware.importer.data.Data;
+import com.graphaware.importer.data.DynamicData;
 import com.graphaware.importer.data.location.DataLocator;
 import com.graphaware.importer.data.location.InputFileLocator;
+import com.graphaware.importer.importer.Importer;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * {@link com.graphaware.importer.BatchImporter} for file-based imports.
@@ -48,7 +52,15 @@ public abstract class FileBatchImporter extends BatchImporter<FileImportConfig> 
     /**
      * Get input data to logical file name mapping.
      *
-     * @return mapping.
+     * @return mapping. One-to-one mapping of all importers' input data names by default.
      */
-    protected abstract Map<Data, String> input();
+    protected Map<Data, String> input() {
+        Set<String> inputs = new HashSet<>();
+
+        for (Importer importer : importers()) {
+            inputs.add(importer.inputData().name());
+        }
+
+        return DynamicData.oneToOne(inputs.toArray(new String[inputs.size()]));
+    }
 }

@@ -139,12 +139,12 @@ abstract class BaseImportContext implements ImportContext {
     @Override
     public final void shutdown() {
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        executor.schedule(new Runnable() {
+        executor.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
                 LOG.info("I am still alive!");
             }
-        }, 1, TimeUnit.MINUTES);
+        }, 1, 1, TimeUnit.MINUTES);
 
         preShutdown();
 

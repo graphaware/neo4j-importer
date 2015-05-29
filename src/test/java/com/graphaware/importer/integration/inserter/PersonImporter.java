@@ -56,4 +56,9 @@ public class PersonImporter extends BaseImporter<Map<String, Object>> {
             super.createCache(caches, name);
         }
     }
+
+    @Override
+    public void createIndices() {
+        createIndex(label("Person"), "name");
+    }
 }

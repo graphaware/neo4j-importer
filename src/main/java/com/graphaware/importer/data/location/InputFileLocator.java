@@ -30,13 +30,9 @@ public class InputFileLocator extends FileLocator {
 
         checkFiles();
 
-        LOG.info("Files OK.");
-
         LOG.info("Checking data...");
 
         checkData();
-
-        LOG.info("Data OK.");
     }
 
     /**

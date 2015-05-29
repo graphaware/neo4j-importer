@@ -134,8 +134,6 @@ public class DefaultExecutionPlan implements ExecutionPlan {
      */
     @Override
     public final boolean canRun(Importer importer) {
-        LOG.info("Checking if importer " + importer.name() + " can run now...");
-
         Set<Importer> remaining = new HashSet<>();
         for (Importer candidate : importers) {
             if (hasNotFinished(candidate)) {
@@ -143,7 +141,16 @@ public class DefaultExecutionPlan implements ExecutionPlan {
             }
         }
 
-        return canRun(importer, remaining, neededCaches, cacheCreators);
+        boolean result = canRun(importer, remaining, neededCaches, cacheCreators);
+
+        if (result) {
+            LOG.info("Importer " + importer.name() + " CAN run now.");
+        }
+        else {
+            LOG.info("Importer " + importer.name() + " CANNOT run yet.");
+        }
+
+        return result;
     }
 
     /**

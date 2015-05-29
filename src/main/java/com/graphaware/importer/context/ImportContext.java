@@ -29,9 +29,15 @@ import org.neo4j.unsafe.batchinsert.BatchInserterIndexProvider;
 public interface ImportContext {
 
     /**
+     * Perform essential bootstrap of the context, i.e., create {@link org.neo4j.unsafe.batchinsert.BatchInserter} and
+     * {@link org.neo4j.unsafe.batchinsert.BatchInserterIndexProvider}.
+     */
+    void essentialBootstrap();
+
+    /**
      * Bootstrap the context, i.e. prepare for import.
      */
-    void bootstrap();
+    void fullBootstrap();
 
     /**
      * Check that the context is OK.

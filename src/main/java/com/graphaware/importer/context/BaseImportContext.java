@@ -77,17 +77,21 @@ abstract class BaseImportContext implements ImportContext {
      * {@inheritDoc}
      */
     @Override
-    public final void bootstrap() {
-        LOG.info("Bootstrapping context...");
-
-        preBootstrap();
-
+    public final void essentialBootstrap() {
         inserter = createBatchInserter();
         indexProvider = createIndexProvider();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void fullBootstrap() {
+        preBootstrap();
+
+        essentialBootstrap();
 
         postBootstrap();
-
-        LOG.info("Bootstrapped context.");
     }
 
     /**
@@ -107,11 +111,7 @@ abstract class BaseImportContext implements ImportContext {
      */
     @Override
     public final void check() {
-        LOG.info("Checking context...");
-
         doCheck();
-
-        LOG.info("Checked context.");
     }
 
     /**
@@ -135,8 +135,6 @@ abstract class BaseImportContext implements ImportContext {
      */
     @Override
     public final void shutdown() {
-        LOG.info("Shutting down context.");
-
         preShutdown();
         indexProvider().shutdown();
         inserter().shutdown();

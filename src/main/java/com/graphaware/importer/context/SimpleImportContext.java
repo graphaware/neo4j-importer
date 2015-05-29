@@ -114,7 +114,6 @@ public class SimpleImportContext extends BaseImportContext {
         try {
             LOG.info("Deleting " + config.getGraphDir() + "...");
             FileUtils.deleteDirectory(new File(config.getGraphDir()));
-            LOG.info("Deleted " + config.getGraphDir());
         } catch (IOException e) {
             LOG.warn("Could not delete graph directory", e);
             throw new RuntimeException(e);

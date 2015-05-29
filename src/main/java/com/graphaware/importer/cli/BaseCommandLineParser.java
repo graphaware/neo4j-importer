@@ -38,7 +38,7 @@ public abstract class BaseCommandLineParser<T extends ImportConfig> implements C
         String outputDir = getMandatoryValue(line, "o");
         String props = getMandatoryValue(line, "r");
 
-        LOG.info("Producing import context...");
+        LOG.info("Producing import config:");
         LOG.info("\tGraph: " + graphDir);
         LOG.info("\tOutput: " + outputDir);
         LOG.info("\tProps: " + props);

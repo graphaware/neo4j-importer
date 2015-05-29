@@ -93,7 +93,7 @@ public abstract class BaseImporter<T> implements Importer {
                 return;
             }
 
-            LOG.info("Populating " + inputData());
+            LOG.info("Populating " + inputData() + "...");
 
             while (reader.readRecord()) {
                 if (reader.getRow() % loggingInterval() == 0) {

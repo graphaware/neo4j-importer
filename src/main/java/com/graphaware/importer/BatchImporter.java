@@ -47,20 +47,61 @@ public abstract class BatchImporter<T extends ImportConfig> {
      */
     public void run(String[] args) {
         try {
+            LOG.info("Creating import config...");
+
             T config = commandLineParser().parseArgs(args);
             if (config == null) {
                 return;
             }
 
+            LOG.info("Creating import context...");
+
             ImportContext context = createContext(config);
 
-            context.bootstrap();
+            LOG.info("Fully bootstrapping context...");
+
+            context.fullBootstrap();
+
+            LOG.info("Checking context...");
+
             context.check();
+
+            LOG.info("Creating statistics and starting timing...");
 
             StatisticsCollector stats = createStats(context);
             stats.startTiming();
 
-            performImport(context);
+            LOG.info("Creating importers...");
+
+            Set<Importer> importers = createImporters();
+
+            LOG.info("Creating execution plan...");
+
+            ExecutionPlan plan = new DefaultExecutionPlan(importers, context);
+
+            LOG.info("Performing import...");
+
+            performImport(context, plan);
+
+            LOG.info("Shutting down context...");
+
+            context.shutdown();
+
+            LOG.info("Context shut down.");
+
+            LOG.info("Bootstrapping essential context...");
+
+            context.essentialBootstrap();
+
+            LOG.info("Creating indices...");
+
+            createIndices(plan);
+
+            LOG.info("Shutting down context...");
+
+            context.shutdown();
+
+            LOG.info("Context shut down.");
 
             stats.printTiming();
 
@@ -135,25 +176,6 @@ public abstract class BatchImporter<T extends ImportConfig> {
     }
 
     /**
-     * Perform the actual import.
-     *
-     * @param context import context.
-     */
-    private void performImport(ImportContext context) {
-        LOG.info("Starting import...");
-
-        Set<Importer> importers = createImporters();
-        ExecutionPlan plan = new DefaultExecutionPlan(importers, context);
-        performImport(context, plan);
-
-        LOG.info("Finishing import...");
-
-        context.shutdown();
-
-        LOG.info("Batch inserter shut down.");
-    }
-
-    /**
      * Create a set of importers that will perform the import.
      *
      * @return importers.
@@ -168,7 +190,7 @@ public abstract class BatchImporter<T extends ImportConfig> {
      */
     private void performImport(ImportContext context, final ExecutionPlan executionPlan) {
         for (Importer importer : executionPlan.getOrderedImporters()) {
-            LOG.info("Preparing " + importer.name());
+            LOG.info("Preparing " + importer.name() + "...");
             importer.prepare(context);
         }
 
@@ -208,16 +230,16 @@ public abstract class BatchImporter<T extends ImportConfig> {
             }
         }
 
-        LOG.info("Import finished, will destroy caches.");
+        LOG.info("Destroying caches...");
 
         context.caches().destroy();
 
-        LOG.info("Will create indices.");
+        LOG.info("Caches destroyed.");
+    }
 
+    private void createIndices(ExecutionPlan executionPlan) {
         for (Importer batchImporter : executionPlan.getOrderedImporters()) {
             batchImporter.createIndices();
         }
-
-        LOG.info("Indices created.");
     }
 }

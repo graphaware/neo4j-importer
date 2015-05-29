@@ -60,7 +60,7 @@ public class SimpleDataLocator implements DataLocator {
      */
     @Override
     public String locate(Data data) {
-        LOG.info("Locating " + data);
+        LOG.info("Locating " + data + "...");
 
         if (!canLocate(data)) {
             LOG.error("Cannot locate " + data);

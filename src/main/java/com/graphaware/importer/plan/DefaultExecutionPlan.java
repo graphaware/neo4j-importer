@@ -101,14 +101,14 @@ public class DefaultExecutionPlan implements ExecutionPlan {
      * @param remaining remaining modules, some of which form a cycle.
      */
     protected void reportCycle(Set<Importer> remaining) {
-        StringBuilder message = new StringBuilder("It looks like there is a dependency cycle between some of the following importers:");
+        StringBuilder message = new StringBuilder("It looks like there is a dependency cycle between some of the following importers: ");
         for (Importer importer : remaining) {
             message.append(importer.name()).append(", ");
         }
         String msg = message.toString().substring(0, message.length() - 2);
 
         LOG.error(msg);
-        throw new IllegalArgumentException(msg);
+        throw new IllegalStateException(msg);
     }
 
     /**

@@ -59,7 +59,7 @@ public class LoggingStatisticsCollector implements StatisticsCollector {
      */
     @Override
     public void printTiming() {
-        LOG.info(name + " took " + sw.getElapsedTimeSecs() + " seconds / " + Math.round(sw.getElapsedTimeSecs() / 60.0) + " minutes");
+        LOG.info(name + " took " + sw.getElapsedTimeSecs() + " seconds (" + Math.round(sw.getElapsedTimeSecs() / 60.0) + " minutes)");
     }
 
     /**

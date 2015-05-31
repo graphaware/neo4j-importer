@@ -15,7 +15,7 @@
 
 package com.graphaware.importer.cli;
 
-import com.graphaware.importer.config.ImportConfig;
+import com.graphaware.importer.config.DbImportConfig;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Implementation of {@link com.graphaware.importer.cli.CommandLineParser} for database imports.
  */
-public abstract class DbCommandLineParser extends BaseCommandLineParser {
+public abstract class DbCommandLineParser extends BaseCommandLineParser<DbImportConfig> {
 
     private static final Logger LOG = LoggerFactory.getLogger(DbCommandLineParser.class);
 
@@ -34,7 +34,7 @@ public abstract class DbCommandLineParser extends BaseCommandLineParser {
      * {@inheritDoc}
      */
     @Override
-    protected ImportConfig doProduceConfig(CommandLine line, String graphDir, String outputDir, String props) throws ParseException {
+    protected DbImportConfig doProduceConfig(CommandLine line, String graphDir, String outputDir, String props) throws ParseException {
         String host = getMandatoryValue(line, "h");
         String port = getMandatoryValue(line, "t");
         String user = getMandatoryValue(line, "u");
@@ -62,7 +62,7 @@ public abstract class DbCommandLineParser extends BaseCommandLineParser {
      * @return import configuration.
      * @throws ParseException
      */
-    protected abstract ImportConfig doProduceConfig(CommandLine line, String graphDir, String outputDir, String props, String host, String port, String user, String password) throws ParseException;
+    protected abstract DbImportConfig doProduceConfig(CommandLine line, String graphDir, String outputDir, String props, String host, String port, String user, String password) throws ParseException;
 
     /**
      * {@inheritDoc}

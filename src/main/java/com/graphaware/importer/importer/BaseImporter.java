@@ -123,7 +123,7 @@ public abstract class BaseImporter<T> implements Importer {
             try {
                 executor.awaitTermination(30, TimeUnit.MINUTES);
             } catch (InterruptedException e) {
-                LOG.warn("Could not finish processing the queue of DTOs in 30 minutes!");
+                LOG.warn(name() + " could not finish processing the queue of DTOs in 30 minutes!");
             }
 
             this.shutdown();
@@ -191,7 +191,7 @@ public abstract class BaseImporter<T> implements Importer {
         } catch (RuntimeException e) {
             collector.incrementsStats(IMPORT_STATS, "Skipped");
             collector.incrementsStats("Production", e.getMessage());
-            LOG.warn("Failed to produce object. Skipping row " + row + ": " + e.getMessage() + ". Raw data: " + rawData, e);
+            LOG.warn(name() + "failed to produce object. Skipping row " + row + ": " + e.getMessage() + ". Raw data: " + rawData, e);
             return;
         }
 
@@ -212,8 +212,8 @@ public abstract class BaseImporter<T> implements Importer {
                 } catch (RuntimeException e) {
                     collector.incrementsStats(IMPORT_STATS, "Skipped");
                     collector.incrementsStats("Insertion", e.getMessage());
-                    LOG.debug("Failed to insert object. Skipping row " + row + ": " + e.getMessage() + ". Raw data: " + rawData, e);
-                    LOG.warn("Failed to insert object. Skipping row " + row + ": " + e.getMessage() + ". Raw data: " + rawData);
+                    LOG.debug(name() + " failed to insert object. Skipping row " + row + ": " + e.getMessage() + ". Raw data: " + rawData, e);
+                    LOG.warn(name() + " failed to insert object. Skipping row " + row + ": " + e.getMessage() + ". Raw data: " + rawData);
                 }
             }
         });

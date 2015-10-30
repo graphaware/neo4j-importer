@@ -8,5 +8,6 @@ target/
 *.iws
 *.ipr
 *.db
+*.log
 .DS_Store
 .classpath

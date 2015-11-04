@@ -22,9 +22,9 @@ import org.springframework.util.Assert;
 import javax.sql.DataSource;
 
 /**
- * {@link com.graphaware.importer.data.access.DataReader} for databases.
+ * {@link com.graphaware.importer.data.access.TabularDataReader} for databases.
  */
-public abstract class DbDataReader extends BaseDataReader {
+public abstract class DbDataReader extends BaseTabularDataReader {
 
     private final String dbHost;
     private final String dbPort;

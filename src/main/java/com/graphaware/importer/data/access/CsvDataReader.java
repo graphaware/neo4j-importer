@@ -24,9 +24,9 @@ import java.io.Reader;
 import java.util.Iterator;
 
 /**
- * {@link DataReader} for CSV files.
+ * {@link TabularDataReader} for CSV files.
  */
-public class CsvDataReader extends BaseDataReader {
+public class CsvDataReader extends BaseTabularDataReader {
 
     private Iterator<CSVRecord> records;
     private CSVRecord record;
@@ -88,7 +88,7 @@ public class CsvDataReader extends BaseDataReader {
      * {@inheritDoc}
      */
     @Override
-    protected String doReadString(String columnName) {
+    protected String doReadObject(String columnName) {
         String s = record.get(columnName);
 
         if (s != null) {

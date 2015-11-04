@@ -24,11 +24,11 @@ import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 /**
- * Abstract base-class for {@link DataReader} implementations.
+ * Abstract base-class for {@link TabularDataReader} implementations.
  */
-public abstract class BaseDataReader implements DataReader {
+public abstract class BaseTabularDataReader implements TabularDataReader {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BaseDataReader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BaseTabularDataReader.class);
 
     protected SimpleDateFormat dateFormat;
 
@@ -112,8 +112,8 @@ public abstract class BaseDataReader implements DataReader {
      * {@inheritDoc}
      */
     @Override
-    public final String readString(String columnName) {
-        return doReadString(columnName);
+    public final String readObject(String columnName) {
+        return doReadObject(columnName);
     }
 
     /**
@@ -123,7 +123,7 @@ public abstract class BaseDataReader implements DataReader {
      * @return the String, or <code>null</code> if the value was <code>null</code>, or an empty String.
      */
     protected final String readStringForConversion(String columnName) {
-        String value = doReadString(columnName);
+        String value = doReadObject(columnName);
 
         if (value == null) {
             return null;
@@ -142,5 +142,5 @@ public abstract class BaseDataReader implements DataReader {
      * @param columnName column name.
      * @return String, can be <code>null</code>.
      */
-    protected abstract String doReadString(String columnName);
+    protected abstract String doReadObject(String columnName);
 }

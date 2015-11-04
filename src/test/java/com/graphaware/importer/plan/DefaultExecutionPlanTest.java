@@ -22,9 +22,9 @@ import com.graphaware.importer.cache.MapDBCaches;
 import com.graphaware.importer.context.ImportContext;
 import com.graphaware.importer.data.Data;
 import com.graphaware.importer.data.DynamicData;
-import com.graphaware.importer.data.access.DataReader;
-import com.graphaware.importer.importer.BaseImporter;
+import com.graphaware.importer.data.access.TabularDataReader;
 import com.graphaware.importer.importer.Importer;
+import com.graphaware.importer.importer.TabularImporter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -153,7 +153,7 @@ public class DefaultExecutionPlanTest {
         assertTrue(plan.allFinished());
     }
 
-    private class TestImporter extends BaseImporter<Object> {
+    private class TestImporter extends TabularImporter<Object> {
 
         @InjectCache(name = "C1", creator = true)
         private Cache<Long, Long> c1;
@@ -167,7 +167,7 @@ public class DefaultExecutionPlanTest {
         }
 
         @Override
-        public Object produceObject(DataReader record) {
+        public Object produceObject(TabularDataReader record) {
             throw new UnsupportedOperationException();
         }
 
@@ -177,7 +177,7 @@ public class DefaultExecutionPlanTest {
         }
     }
 
-    private class TestImporter2 extends BaseImporter<Object> {
+    private class TestImporter2 extends TabularImporter<Object> {
 
         @InjectCache(name = "C2", creator = true)
         private Cache<String, Long> c2;
@@ -191,7 +191,7 @@ public class DefaultExecutionPlanTest {
         }
 
         @Override
-        public Object produceObject(DataReader record) {
+        public Object produceObject(TabularDataReader record) {
             throw new UnsupportedOperationException();
         }
 
@@ -201,7 +201,7 @@ public class DefaultExecutionPlanTest {
         }
     }
 
-    private class TestImporter3 extends BaseImporter<Object> {
+    private class TestImporter3 extends TabularImporter<Object> {
 
         @InjectCache(name = "C2")
         private Cache<String, Long> c2;
@@ -215,7 +215,7 @@ public class DefaultExecutionPlanTest {
         }
 
         @Override
-        public Object produceObject(DataReader record) {
+        public Object produceObject(TabularDataReader record) {
             throw new UnsupportedOperationException();
         }
 
@@ -225,7 +225,7 @@ public class DefaultExecutionPlanTest {
         }
     }
 
-    private class TestImporter4 extends BaseImporter<Object> {
+    private class TestImporter4 extends TabularImporter<Object> {
 
         @InjectCache(name = "C3", creator = true)
         private Cache<Long, Long> c3;
@@ -236,7 +236,7 @@ public class DefaultExecutionPlanTest {
         }
 
         @Override
-        public Object produceObject(DataReader record) {
+        public Object produceObject(TabularDataReader record) {
             throw new UnsupportedOperationException();
         }
 

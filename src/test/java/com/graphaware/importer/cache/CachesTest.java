@@ -16,9 +16,9 @@
 package com.graphaware.importer.cache;
 
 import com.graphaware.importer.data.Data;
-import com.graphaware.importer.data.access.DataReader;
-import com.graphaware.importer.importer.BaseImporter;
+import com.graphaware.importer.data.access.TabularDataReader;
 import com.graphaware.importer.importer.Importer;
+import com.graphaware.importer.importer.TabularImporter;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -98,7 +98,7 @@ public class CachesTest {
         assertEquals(0, c3.size());
     }
 
-    private class TestImporter extends BaseImporter<Object> {
+    private class TestImporter extends TabularImporter<Object> {
 
         @InjectCache(name = "C1")
         private Cache<Long, Long> candidates;
@@ -112,7 +112,7 @@ public class CachesTest {
         }
 
         @Override
-        public Object produceObject(DataReader record) {
+        public Object produceObject(TabularDataReader record) {
             throw new UnsupportedOperationException();
         }
 
@@ -122,7 +122,7 @@ public class CachesTest {
         }
     }
 
-    private class TestImporter2 extends BaseImporter<Object> {
+    private class TestImporter2 extends TabularImporter<Object> {
 
         @InjectCache(name = "C3")
         private Cache<Long, Long> candidates;
@@ -133,7 +133,7 @@ public class CachesTest {
         }
 
         @Override
-        public Object produceObject(DataReader record) {
+        public Object produceObject(TabularDataReader record) {
             throw new UnsupportedOperationException();
         }
 

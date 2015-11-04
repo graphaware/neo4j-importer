@@ -36,8 +36,9 @@ import java.util.concurrent.TimeUnit;
  * responsible for doing any processing on the DTOs and ultimately creating nodes and relationships out of it.
  *
  * @param <T> type of the DTO this inserter works with.
+ * @param <R> type of the DataReader this inserter works with.
  */
-public abstract class BaseImporter<T> implements Importer {
+public abstract class BaseImporter<T, R extends DataReader> implements Importer {
 
     private static final String IMPORT_STATS = "Import Statistics";
 
@@ -100,7 +101,7 @@ public abstract class BaseImporter<T> implements Importer {
         }
 
         try {
-            DataReader reader = context.createReader(inputData());
+            R reader = (R) context.createReader(inputData());
 
             if (reader == null) {
                 LOG.warn("Could not create reader for " + inputData());
@@ -172,7 +173,7 @@ public abstract class BaseImporter<T> implements Importer {
         return 100_000;
     }
 
-    private void processSingleRow(DataReader reader) {
+    private void processSingleRow(R reader) {
         final int row = reader.getRow();
         final String rawData = reader.getRawRecord();
 
@@ -237,7 +238,7 @@ public abstract class BaseImporter<T> implements Importer {
      * @param record row.
      * @return the object, can be <code>null</code> if it can't be produced for whatever reason.
      */
-    public abstract T produceObject(DataReader record);
+    public abstract T produceObject(R record);
 
     /**
      * Process an object, i.e. create nodes and relationships out of it. The object is guaranteed not to be <code>null</code>.

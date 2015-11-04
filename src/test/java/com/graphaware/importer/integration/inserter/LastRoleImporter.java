@@ -20,10 +20,10 @@ import com.graphaware.importer.cache.Cache;
 import com.graphaware.importer.cache.InjectCache;
 import com.graphaware.importer.data.Data;
 import com.graphaware.importer.data.DynamicData;
-import com.graphaware.importer.data.access.DataReader;
-import com.graphaware.importer.importer.BaseImporter;
+import com.graphaware.importer.data.access.TabularDataReader;
+import com.graphaware.importer.importer.TabularImporter;
 
-public class LastRoleImporter extends BaseImporter<Pair<Long, String>> {
+public class LastRoleImporter extends TabularImporter<Pair<Long, String>> {
 
     @InjectCache(name = "roles")
     private Cache<Long, String[]> lastRoleCache;
@@ -34,9 +34,9 @@ public class LastRoleImporter extends BaseImporter<Pair<Long, String>> {
     }
 
     @Override
-    public Pair<Long, String> produceObject(DataReader record) {
+    public Pair<Long, String> produceObject(TabularDataReader record) {
         Long personId = record.readLong("personId");
-        String position = record.readString("position");
+        String position = record.readObject("position");
 
         return new Pair<>(personId, position);
     }

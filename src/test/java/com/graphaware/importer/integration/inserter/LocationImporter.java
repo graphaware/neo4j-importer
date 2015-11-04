@@ -20,15 +20,15 @@ import com.graphaware.importer.cache.Caches;
 import com.graphaware.importer.cache.InjectCache;
 import com.graphaware.importer.data.Data;
 import com.graphaware.importer.data.DynamicData;
-import com.graphaware.importer.data.access.DataReader;
-import com.graphaware.importer.importer.BaseImporter;
+import com.graphaware.importer.data.access.TabularDataReader;
+import com.graphaware.importer.importer.TabularImporter;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.neo4j.graphdb.DynamicLabel.label;
 
-public class LocationImporter extends BaseImporter<Map<String, Object>> {
+public class LocationImporter extends TabularImporter<Map<String, Object>> {
 
     @InjectCache(name = "locations", creator = true)
     private Cache<Long, Long> locationCache;
@@ -39,11 +39,11 @@ public class LocationImporter extends BaseImporter<Map<String, Object>> {
     }
 
     @Override
-    public Map<String, Object> produceObject(DataReader record) {
+    public Map<String, Object> produceObject(TabularDataReader record) {
         Map<String, Object> result = new HashMap<>();
 
         result.put("id", record.readLong("id"));
-        result.put("name", record.readString("name"));
+        result.put("name", record.readObject("name"));
 
         return result;
     }

@@ -22,9 +22,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * A {@link com.graphaware.importer.data.access.DataReader} that reads data from a {@link com.graphaware.importer.cache.Cache}.
+ * A {@link com.graphaware.importer.data.access.TabularDataReader} that reads data from a {@link com.graphaware.importer.cache.Cache}.
  */
-public class CacheDataReader implements DataReader {
+public class CacheDataReader implements TabularDataReader {
 
     private final Caches caches;
     private final Map<String, CacheEntryMapper> mappers;
@@ -117,7 +117,7 @@ public class CacheDataReader implements DataReader {
      * {@inheritDoc}
      */
     @Override
-    public String readString(String columnName) {
+    public String readObject(String columnName) {
         String value = (String) mapper.getValue(entry, columnName);
 
         if (value == null) {

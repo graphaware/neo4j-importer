@@ -20,8 +20,8 @@ import com.graphaware.importer.cache.Caches;
 import com.graphaware.importer.cache.InjectCache;
 import com.graphaware.importer.data.Data;
 import com.graphaware.importer.data.DynamicData;
-import com.graphaware.importer.data.access.DataReader;
-import com.graphaware.importer.importer.BaseImporter;
+import com.graphaware.importer.data.access.TabularDataReader;
+import com.graphaware.importer.importer.TabularImporter;
 import com.graphaware.importer.integration.domain.Person;
 import org.springframework.util.StringUtils;
 
@@ -30,7 +30,7 @@ import java.util.Collections;
 import static org.neo4j.graphdb.DynamicLabel.label;
 import static org.neo4j.graphdb.DynamicRelationshipType.withName;
 
-public class PersonImporter extends BaseImporter<Person> {
+public class PersonImporter extends TabularImporter<Person> {
 
     @InjectCache(name = "people", creator = true)
     private Cache<Long, Long> personCache;
@@ -44,12 +44,12 @@ public class PersonImporter extends BaseImporter<Person> {
     }
 
     @Override
-    public Person produceObject(DataReader record) {
+    public Person produceObject(TabularDataReader record) {
         //for testing purposes, let's say we can't construct a person without ID
         if (record.readLong("id") == null) {
             return null;
         }
-        return new Person(record.readLong("id"), record.readString("name"), record.readInt("age"), record.readLong("location"));
+        return new Person(record.readLong("id"), record.readObject("name"), record.readInt("age"), record.readLong("location"));
     }
 
     @Override

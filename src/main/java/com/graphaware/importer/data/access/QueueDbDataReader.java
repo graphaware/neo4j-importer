@@ -143,7 +143,7 @@ public abstract class QueueDbDataReader extends DbDataReader {
      * {@inheritDoc}
      */
     @Override
-    protected String doReadString(String columnName) {
+    protected String doReadObject(String columnName) {
         return record.get(columnName);
     }
 

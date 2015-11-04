@@ -19,8 +19,8 @@ import com.graphaware.importer.cache.Cache;
 import com.graphaware.importer.cache.InjectCache;
 import com.graphaware.importer.data.Data;
 import com.graphaware.importer.data.DynamicData;
-import com.graphaware.importer.data.access.DataReader;
-import com.graphaware.importer.importer.BaseImporter;
+import com.graphaware.importer.data.access.TabularDataReader;
+import com.graphaware.importer.importer.TabularImporter;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,7 +28,7 @@ import java.util.Map;
 
 import static org.neo4j.graphdb.DynamicRelationshipType.withName;
 
-public class FriendsImporter extends BaseImporter<Map<String, Object>> {
+public class FriendsImporter extends TabularImporter<Map<String, Object>> {
 
     @InjectCache(name = "people")
     private Cache<Long, Long> personCache;
@@ -39,7 +39,7 @@ public class FriendsImporter extends BaseImporter<Map<String, Object>> {
     }
 
     @Override
-    public Map<String, Object> produceObject(DataReader record) {
+    public Map<String, Object> produceObject(TabularDataReader record) {
         Map<String, Object> result = new HashMap<>();
 
         result.put("id1", record.readLong("id1"));

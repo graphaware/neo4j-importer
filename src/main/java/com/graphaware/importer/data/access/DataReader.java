@@ -16,10 +16,12 @@
 package com.graphaware.importer.data.access;
 
 /**
- * A reader of tabular data. Does not have to be (and usually isn't) thread-safe. Therefore, this class should be accessed
+ * A reader of data. Does not have to be (and usually isn't) thread-safe. Therefore, this class should be accessed
  * in a single thread.
+ *
+ * @param <O> type of object that is retrieved from cells.
  */
-public interface DataReader extends DataAccess {
+public interface DataReader<O> extends DataAccess {
 
     /**
      * Initialize the reader.
@@ -43,36 +45,12 @@ public interface DataReader extends DataAccess {
     void close();
 
     /**
-     * Read a long number from a column.
+     * Read an object from a column (family,...).
      *
      * @param columnName name of the column.
-     * @return a long number, <code>null</code> if it is empty or not a long.
+     * @return an object.
      */
-    Long readLong(String columnName);
-
-    /**
-     * Read an int number from a column.
-     *
-     * @param columnName name of the column.
-     * @return a int number, <code>null</code> if it is empty or not an int.
-     */
-    Integer readInt(String columnName);
-
-    /**
-     * Read a long representation of a date from a column.
-     *
-     * @param columnName name of the column.
-     * @return a date as ms since epoch, <code>null</code> if it is empty or not a date.
-     */
-    Long readDate(String columnName);
-
-    /**
-     * Read a string from a column.
-     *
-     * @param columnName name of the column.
-     * @return a string.
-     */
-    String readString(String columnName);
+    O readObject(String columnName);
 
     /**
      * Get current row number.

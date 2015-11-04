@@ -20,8 +20,8 @@ import com.graphaware.importer.cache.Caches;
 import com.graphaware.importer.cache.InjectCache;
 import com.graphaware.importer.data.Data;
 import com.graphaware.importer.data.DynamicData;
-import com.graphaware.importer.data.access.DataReader;
-import com.graphaware.importer.importer.BaseImporter;
+import com.graphaware.importer.data.access.TabularDataReader;
+import com.graphaware.importer.importer.TabularImporter;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.DynamicRelationshipType;
 
@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JobsImporter extends BaseImporter<Map<String, Object>> {
+public class JobsImporter extends TabularImporter<Map<String, Object>> {
 
     @InjectCache(name = "people")
     private Cache<Long, Long> personCache;
@@ -46,12 +46,12 @@ public class JobsImporter extends BaseImporter<Map<String, Object>> {
     }
 
     @Override
-    public Map<String, Object> produceObject(DataReader record) {
+    public Map<String, Object> produceObject(TabularDataReader record) {
         Map<String, Object> result = new HashMap<>();
 
         result.put("personId", record.readLong("person_id"));
-        result.put("job", record.readString("job"));
-        result.put("company", record.readString("company"));
+        result.put("job", record.readObject("job"));
+        result.put("company", record.readObject("company"));
 
         return result;
     }

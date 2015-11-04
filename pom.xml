@@ -23,7 +23,7 @@
     </parent>
 
     <artifactId>programmatic-importer</artifactId>
-    <version>2.3.0.35.2-SNAPSHOT</version>
+    <version>2.3.0.35.2</version>
 
     <name>GraphAware Programmatic Neo4j Importer</name>
     <description>Importer high-performance multi-threaded initial data load into Neo4j from CSV/SQL with custom logic</description>
@@ -41,7 +41,7 @@
         <connection>scm:git:git@github.com:graphaware/neo4j-importer.git</connection>
         <developerConnection>scm:git:git@github.com:graphaware/neo4j-importer.git</developerConnection>
         <url>git@github.com:graphaware/neo4j-importer.git</url>
-        <tag>HEAD</tag>
+        <tag>programmatic-importer-2.3.0.35.2</tag>
     </scm>
 
     <developers>

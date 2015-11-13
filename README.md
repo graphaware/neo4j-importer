@@ -1,7 +1,7 @@
 GraphAware Neo4j Importer
 ======================================
 
-[![Build Status](https://travis-ci.org/graphaware/neo4j-importer.png)](https://travis-ci.org/graphaware/neo4j-importer) | <a href="http://graphaware.com/products/" target="_blank">Products</a> | Latest Release: 2.3.0.35.2
+[![Build Status](https://travis-ci.org/graphaware/neo4j-importer.png)](https://travis-ci.org/graphaware/neo4j-importer) | <a href="http://graphaware.com/products/" target="_blank">Products</a> | Latest Release: 2.3.1.35.2
 
 GraphAware Importer is a high-performance importer for importing data from any data source to Neo4j. It is intended
 for imports of large amounts of data (millions to billions of nodes and relationships), which needs to be cleansed,

@@ -14,7 +14,7 @@ There are a number of ways of getting data into Neo4j.
 
 * If you have small amounts of CSV data, use [Neo4j's LOAD CSV](http://neo4j.com/docs/stable/query-load-csv.html)
 * If you have large amounts of clean CSV data where you can separate nodes and relationships into different files, use [Neo4j's Import Tool](http://neo4j.com/docs/stable/import-tool.html)
-* If you have large amounts of ready-to-be imported (i.e. not too dirty) data in any tabular form and don't want do code, use GraphAware's Noader (coming soon)
+* If you have large amounts of ready-to-be imported (i.e. not too dirty) data in any tabular form and don't want do code, use GraphAware's Neo4j DataBridge (coming soon)
 * For all other scenarios, especially if you have large volumes of data from any source (CSV, MySQL, Oracle, HBase, you name it!) that need to be cleansed, normalised or transformed in some way, use this importer. **You will need to code** in Java.
 
 ### Tutorial
@@ -109,12 +109,12 @@ all the needed dependencies. For this to happen, you need something like this in
 #### Step 2: Data Reader
 
 Implement a `DataReader` that is able to read from your data source. Most readers will be `TabularDataReader`s. If you're
-importing from a CSV file, you can skip this step and use the providede `CsvDataReader`. If you're importing from a relational database,
+importing from a CSV file, you can skip this step and use the provided `CsvDataReader`. If you're importing from a relational database,
 you can save some time by extending `DbDataReader` or `QueueDbDataReader` (recommended).
 
 For example, it you're reading from Oracle, your data reader will look something like this:
 
-```
+```java
 /**
  * {@link com.graphaware.importer.data.access.DbDataReader} for Oracle.
  */
@@ -304,7 +304,7 @@ public class Person extends Neo4jPropertyContainer {
 }
 ```
 
-In this case, we're expecting each row from the data source to correspond contain four pieces of information (id, name, age, location).
+In this case, we're expecting each row from the data source to contain four pieces of information (id, name, age, location).
 The ones that we want to become a node's properties in Neo4j, we annotate with `@Neo4jProperty`. The `location` property will not
 be stored in Neo4j, it will be used to link the person to a location, so it is not annotated. Choose the names of the properties
 according to how they will be called in Neo4j - it doesn't matter at this point what they are called in your source database.
@@ -339,7 +339,7 @@ public class LocationImporter extends TabularImporter<Map<String, Object>> {
 
     @Override
     public void processObject(Map<String, Object> object) {
-        locationCache.put((Long) object.get("id"), context.inserter().createNode(object, label("Location")));
+        locationCache.put((Long) object.get("id"), context.inserter().createNode(object, DynamicLabel.label("Location")));
     }
 
     @Override
@@ -371,7 +371,7 @@ node.
 
 Since we will need to link people to locations later on, we should remember what Neo4j node ID was assigned to our the each
 location. Remember the "id" property of the location is coming from our relational data. For this reason, we need to have
-an (off-head) `Cache` in place:
+an (off-heap) `Cache` in place:
 
 ```
 @InjectCache(name = "locations", creator = true)
@@ -379,7 +379,7 @@ private Cache<Long, Long> locationCache;
 ```
 
 This tells the importer infrastructure that a cache called "locations" is used by this importer and that the key (own ID)
-if a `Long`. The value is usually a `Long`, because it is the Neo4j node ID. Moreover, `creator=true` tells the infrastructure
+is a `Long`. The value is usually a `Long`, because it is the Neo4j node ID. Moreover, `creator=true` tells the infrastructure
 that this importer creates this cache. That means other importers that need this cache will need to run after this one
 has finished. For each cache, there can only ever be a single creator.
 

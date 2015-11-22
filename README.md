@@ -159,7 +159,7 @@ Note that you will have to add the driver (Oracle JDBC driver in this case) into
 If you're writing an importer for a non-relational database, for example HBase, you will need to do a bit more work. An
 example HBase data reader would look like this:
 
-```
+```java
 import com.graphaware.importer.data.access.DataReader;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.TableName;
@@ -267,7 +267,7 @@ The `String` in the map is some property key and the `Object` is that property's
 
 Let's assume location data is clean, so we'll go with the `Map` approach. For importing people, we choose to create a class like this:
 
-```
+```java
 public class Person extends Neo4jPropertyContainer {
 
     @Neo4jProperty
@@ -316,7 +316,7 @@ Importers should extend `BaseImporter`. If using `TabularDataReader`, you can ex
 For locations and people, we will write the two importers. Don't get scared, we will explain all aspects of
 writing such importers step-by-step.
 
-```
+```java
 public class LocationImporter extends TabularImporter<Map<String, Object>> {
 
     @InjectCache(name = "locations", creator = true)
@@ -373,7 +373,7 @@ Since we will need to link people to locations later on, we should remember what
 location. Remember the "id" property of the location is coming from our relational data. For this reason, we need to have
 an (off-heap) `Cache` in place:
 
-```
+```java
 @InjectCache(name = "locations", creator = true)
 private Cache<Long, Long> locationCache;
 ```
@@ -386,7 +386,7 @@ has finished. For each cache, there can only ever be a single creator.
 When an importer is a cache creator, it needs to actually create the cache by implementing the `createCache(..)` method.
 It should check that it is asked to create the right one. If not, it should delegate to super-class, e.g.:
 
-```
+```java
 @Override
 protected void createCache(Caches caches, String name) {
     if ("locations".equals(name)) {
@@ -400,7 +400,7 @@ protected void createCache(Caches caches, String name) {
 
 With the caches explained, we will refine our node creating method to populate the cache with each new location:
 
-```
+```java
 @Override
 public void processObject(Map<String, Object> object) {
     locationCache.put((Long) object.get("id"), context.inserter().createNode(object, label("Location")));
@@ -413,7 +413,7 @@ a SQL query "SELECT * FROM locations", etc...
 
 With this in mind, let's have a look at the slightly more complicated implementation of `PersonImporter`:
 
-```
+```java
 public class PersonImporter extends TabularImporter<Person> {
 
     @InjectCache(name = "people", creator = true)
@@ -471,7 +471,7 @@ It also overrides to `createIndices()` method to create an index on people's nam
 Finally, we need to create the actual main importer class that will be called when data is to be imported. In our simple
 case, it will look as follows:
 
-```
+```java
 public class MyBatchImporter extends FileBatchImporter {
 
     public static void main(String[] args) {
@@ -515,7 +515,7 @@ dependencies:
 
 The test would use the inserter on our csv data and verify the contents of the produced database:
 
-```
+```java
 @Test
 public void testImport() throws IOException, InterruptedException {
     TemporaryFolder temporaryFolder = new TemporaryFolder();

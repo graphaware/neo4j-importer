@@ -613,7 +613,7 @@ public class OracleImportConfig extends DbImportConfig {
     private final int prefetchSize;
     private final int fetchSize;
 
-    public OracleImportConfig(String graphDir, String outputDir, String props, String dbHost, String dbPort, String user, String password, String serviceName, String sid, String key, int prefetchSize, int fetchSize) {
+    public OracleImportConfig(String graphDir, String outputDir, String props, String dbHost, String dbPort, String user, String password, int prefetchSize, int fetchSize) {
         super(graphDir, outputDir, props, dbHost, dbPort, user, password);
         this.prefetchSize = prefetchSize;
         this.fetchSize = fetchSize;

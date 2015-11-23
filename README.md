@@ -1,5 +1,5 @@
 GraphAware Neo4j Importer
-======================================
+=========================
 
 [![Build Status](https://travis-ci.org/graphaware/neo4j-importer.png)](https://travis-ci.org/graphaware/neo4j-importer) | <a href="http://graphaware.com/products/" target="_blank">Products</a> | Latest Release: 2.3.1.36.2
 
@@ -8,7 +8,7 @@ for initial one-off imports of large amounts of data (millions to billions of no
 to be cleansed, normalised, or transformed during the import. Depending on many things (connection speed, database speed,
 query complexity, data quality,...), you'll be able to import millions of nodes and relationships in minutes.
 
-### Another Importer?
+## Another Importer?
 
 There are a number of ways of getting data into Neo4j.
 
@@ -17,7 +17,7 @@ There are a number of ways of getting data into Neo4j.
 * If you have large amounts of ready-to-be imported (i.e. not too dirty) data in any tabular form and don't want do code, use GraphAware's Neo4j DataBridge (coming soon)
 * For all other scenarios, especially if you have large volumes of data from any source (CSV, MySQL, Oracle, HBase, you name it!) that need to be cleansed, normalised or transformed in some way, use this importer. **You will need to code** in Java.
 
-### Tutorial
+## Tutorial
 
 This tutorial will guide you through writing an efficient one-off importer of data into Neo4j in a short amount of time.
 **You need to be able to write some Java.** What you will get at the end of the process is a standalone Java application
@@ -27,7 +27,7 @@ under the hood.
 
 This tool **will not** be able to import into an existing database, or a running Neo4j instance (yet).
 
-#### Step 0: Get Data
+### Step 0: Get Data
 
 You need some data of course. For this tutorial, we're going to be importing from 2 CSV files:
 
@@ -64,7 +64,7 @@ CREATE
 
 Note that the last two lines in people-file.csv are bad data, we don't want to import these.
 
-#### Step 1: New Project
+### Step 1: New Project
 
 Create a brand new Java project and bring this project as its dependency. Assuming you're using Maven, declare the following
 dependency in your pom.xml
@@ -106,7 +106,7 @@ all the needed dependencies. For this to happen, you need something like this in
 </build>
 ```
 
-#### Step 2: Data Reader
+### Step 2: Data Reader
 
 Implement a `DataReader` that is able to read from your data source. Most readers will be `TabularDataReader`s. If you're
 importing from a CSV file, you can skip this step and use the provided `CsvDataReader`. If you're importing from a relational database,
@@ -256,7 +256,7 @@ public class HbaseDataReader implements DataReader<Map<String, Collection<String
     }
 ```
 
-#### Step 3: Domain
+### Step 3: Domain
 
 You now need to define some Java classes that represent the things you are going to be importing. The data from the reader
 will be translated to these classes. Validation, normalization, and transformation can be applied to these classes, before
@@ -309,7 +309,7 @@ The ones that we want to become a node's properties in Neo4j, we annotate with `
 be stored in Neo4j, it will be used to link the person to a location, so it is not annotated. Choose the names of the properties
 according to how they will be called in Neo4j - it doesn't matter at this point what they are called in your source database.
 
-#### Step 4: Importers
+### Step 4: Importers
 
 Now you define the actual import logic. For each domain class from the previous step, there should be one `Importer`.
 Importers should extend `BaseImporter`. If using `TabularDataReader`, you can extend `TabularImporter` instead.
@@ -466,7 +466,7 @@ public class PersonImporter extends TabularImporter<Person> {
 This importer is producing a person cache and using a location cache to create relationships between people and locations.
 It also overrides to `createIndices()` method to create an index on people's names.
 
-#### Step 5: Wiring it all together
+### Step 5: Wiring it all together
 
 Finally, we need to create the actual main importer class that will be called when data is to be imported. In our simple
 case, it will look as follows:
@@ -499,7 +499,7 @@ public class MyBatchImporter extends FileBatchImporter {
 }
 ```
 
-#### Step 6: Tests
+### Step 6: Tests
 
 We should now test our importer. This isn't hard. We will be using GraphUnit to do that, so you should have that in your
 dependencies:
@@ -548,7 +548,7 @@ public void testImport() throws IOException, InterruptedException {
 }
 ```
 
-#### Step 7: Use
+### Step 7: Use
 
 `java -cp ./path/to/importer/importer.jar com.graphaware.importer.MyBatchImporter`
 
@@ -561,6 +561,130 @@ usage:
  -r,--properties <arg>   use given file as neo4j properties
 ```
 
-#### Step 8: Further Customization
+### Step 8: Further Customization
 
-todo: talk about custom Context, custom CommandLineParser,...
+#### Custom Config
+
+The import process can be further customised. First of all, if additional configuration needs to be passed into the process,
+it is possible to implement a custom `CommandLineParser`. Typically, this is needed to somehow customise the data reading
+components. Depending of where you're importing from and what configuration you need, you may choose to extend
+`BaseCommandLineParser`, `FileCommandLineParser`, or `DbCommandLineParser`.
+
+Closely tied to `CommandLineParser` is the `ImportConfig` that it produces. Again, for custom import configuration, you
+can implement `ImportConfig` by extending `BaseImportConfig`, `FileImportConfig`, or `DbImportConfig`.
+`ImportConfig` then produces a `DataReader`.
+
+Let's illustrate using an example. If we were importing from Oracle and wanted the user to specify the fetchSize for the
+JdbcTemplate and prefetchSize for the Oracle connection, we would need to implement the following classes:
+
+```java
+public class OracleCommandLineParser extends DbCommandLineParser {
+
+    @Override
+    protected DbImportConfig doProduceConfig(CommandLine line, String graphDir, String outputDir, String props, String host, String port, String user, String password) throws ParseException {
+        int prefetchSize = Integer.valueOf(getOptionalValue(line, "pfs", "10000"));
+        int fetchSize = Integer.valueOf(getOptionalValue(line, "fs", "10000"));
+
+        return new OracleImportConfig(
+                graphDir,
+                outputDir,
+                props,
+                host,
+                port,
+                user,
+                password,
+                prefetchSize,
+                fetchSize);
+    }
+
+    @Override
+    protected void addOptions(Options options) {
+        super.addOptions(options);
+
+        options.addOption(new Option("pfs", "prefetchSize", true, "Oracle row prefetch size (default 10000)"));
+        options.addOption(new Option("fs", "fetchSize", true, "JDBC driver row fetch size (default 10000)"));
+    }
+}
+```
+
+```java
+public class OracleImportConfig extends DbImportConfig {
+
+    private final int prefetchSize;
+    private final int fetchSize;
+
+    public OracleImportConfig(String graphDir, String outputDir, String props, String dbHost, String dbPort, String user, String password, String serviceName, String sid, String key, int prefetchSize, int fetchSize) {
+        super(graphDir, outputDir, props, dbHost, dbPort, user, password);
+        this.prefetchSize = prefetchSize;
+        this.fetchSize = fetchSize;
+    }
+
+    @Override
+    public DataReader createReader() {
+        return new OracleDataReader(getDbHost(), getDbPort(), getUser(), getPassword(), prefetchSize, fetchSize);
+    }
+}
+```
+
+Once we have these two classes, we can wire them into the top-level importer by overriding a single method:
+
+```java
+@Override
+protected CommandLineParser<DbImportConfig> commandLineParser() {
+    return new OracleCommandLineParser();
+}
+```
+
+#### Custom Context
+
+Throughout the import process, an `ImportContext` is available to the `Inserter`s by accessing the protected `context`
+field. This context provides access to the actual `BatchInserter` used for creating nodes and relationships, to `caches()`,
+etc. In case more context is needed, for example an external validator (e.g. some JSR-303 validator implementation), you
+can implement a custom `ImportContext` by extending the default `SimpleImportContext`.
+
+```java
+public class MyImportContext extends SimpleImportContext {
+
+    private ObjectNormalizer normalizer;
+    private ObjectValidator validator;
+
+    public MyImportContext(ImportConfig config, Caches caches, DataLocator inputLocator, DataLocator outputLocator) {
+        super(config, caches, inputLocator, outputLocator);
+    }
+
+    public ObjectNormalizer normalizer() {
+        return normalizer;
+    }
+
+    public ObjectValidator validator() {
+        return validator;
+    }
+
+    @Override
+    protected void postBootstrap() {
+        super.postBootstrap();
+
+        normalizer = createNormalizer();
+        validator = createValidator();
+    }
+
+    protected ObjectNormalizer createNormalizer() {
+        return new AnnotationObjectNormalizer();
+    }
+
+    protected ObjectValidator createValidator() {
+        return new StandardObjectValidator();
+    }
+}
+```
+
+Again, this custom context is wired into the import process in the top-level `BatchImporter`:
+
+```java
+@Override
+protected ImportContext createContext(T config) {
+    return new MyImportContext(config, createCaches(), createInputDataLocator(config), createOutputDataLocator(config));
+}
+```
+
+For further customisations, please have a look at the [Javadoc](http://graphaware.com/site/importer/latest/apidocs) or the code in this repo.

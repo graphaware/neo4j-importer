@@ -1,7 +1,7 @@
 GraphAware Neo4j Importer
 =========================
 
-[![Build Status](https://travis-ci.org/graphaware/neo4j-importer.png)](https://travis-ci.org/graphaware/neo4j-importer) | <a href="http://graphaware.com/products/" target="_blank">Products</a> | Latest Release: 2.3.2.37.2
+[![Build Status](https://travis-ci.org/graphaware/neo4j-importer.png)](https://travis-ci.org/graphaware/neo4j-importer) | <a href="http://graphaware.com/products/" target="_blank">Products</a> | Latest Release: 2.3.3.37.2
 
 GraphAware Importer is a high-performance importer for importing data from any data source to Neo4j. It is intended
 for initial one-off imports of large amounts of data (millions to billions of nodes and relationships), which needs
@@ -73,7 +73,7 @@ dependency in your pom.xml
 <dependency>
     <groupId>com.graphaware.neo4j</groupId>
     <artifactId>programmatic-importer</artifactId>
-    <version>2.3.2.37.2</version>
+    <version>2.3.3.37.2</version>
 </dependency>
 ```
 
@@ -508,7 +508,7 @@ dependencies:
 <dependency>
     <groupId>com.graphaware.neo4j</groupId>
     <artifactId>tests</artifactId>
-    <version>2.3.2.37</version>
+    <version>2.3.3.37</version>
     <scope>test</scope>
 </dependency>
 ```

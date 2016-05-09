@@ -19,7 +19,7 @@ import com.graphaware.importer.config.ImportConfig;
 import com.graphaware.importer.inserter.SynchronizedBatchInserter;
 import com.graphaware.importer.stats.LoggingStatisticsCollector;
 import com.graphaware.importer.stats.StatisticsCollector;
-import org.neo4j.index.impl.lucene.LuceneBatchInserterIndexProviderNewImpl;
+import org.neo4j.index.impl.lucene.legacy.LuceneBatchInserterIndexProviderNewImpl;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import org.neo4j.unsafe.batchinsert.BatchInserterIndexProvider;
 import org.neo4j.unsafe.batchinsert.BatchInserters;
@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.Assert;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -176,7 +177,11 @@ abstract class BaseImportContext implements ImportContext {
      * @return batch inserter.
      */
     protected final BatchInserter createBatchInserter() {
-        return new SynchronizedBatchInserter(BatchInserters.inserter(config.getGraphDir(), new HashMap<String, String>((Map) getProperties())));
+        try {
+            return new SynchronizedBatchInserter(BatchInserters.inserter(new File(config.getGraphDir()), new HashMap<String, String>((Map) getProperties())));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

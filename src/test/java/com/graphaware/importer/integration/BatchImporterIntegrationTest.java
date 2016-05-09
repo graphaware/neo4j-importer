@@ -22,6 +22,7 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.springframework.core.io.ClassPathResource;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.fail;
@@ -46,7 +47,7 @@ public class BatchImporterIntegrationTest {
             fail();
         }
 
-        GraphDatabaseService database = new GraphDatabaseFactory().newEmbeddedDatabase(tmpFolder + "/graph.db");
+        GraphDatabaseService database = new GraphDatabaseFactory().newEmbeddedDatabase(new File(tmpFolder + "/graph.db"));
 
         GraphUnit.assertSameGraph(database, "CREATE " +
                         "(p1:Person {id: 1, name: 'Michal Bachman', role: 'MD at GraphAware', age:30})," +
@@ -84,7 +85,7 @@ public class BatchImporterIntegrationTest {
             fail();
         }
 
-        GraphDatabaseService database = new GraphDatabaseFactory().newEmbeddedDatabase(tmpFolder + "/graph.db");
+        GraphDatabaseService database = new GraphDatabaseFactory().newEmbeddedDatabase(new File(tmpFolder + "/graph.db"));
 
         GraphUnit.assertSameGraph(database, "CREATE " +
                         "(p1:Person {id: 1, name: 'Michal Bachman', age:30})," +

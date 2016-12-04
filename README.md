@@ -339,7 +339,7 @@ public class LocationImporter extends TabularImporter<Map<String, Object>> {
 
     @Override
     public void processObject(Map<String, Object> object) {
-        locationCache.put((Long) object.get("id"), context.inserter().createNode(object, DynamicLabel.label("Location")));
+        locationCache.put((Long) object.get("id"), context.inserter().createNode(object, Label.label("Location")));
     }
 
     @Override
@@ -365,7 +365,7 @@ our object with it. Populating it with dirty data is fine at this point, but `nu
 want to produce an object from the record, because it is apparently wrong.
 
 Processing the object means a couple of things. The minimum we should do is create a Location node from the object
-by writing: `context.inserter().createNode(object, label("Location")`. This will create a new node with label "Location"
+by writing: `context.inserter().createNode(object, Label.label("Location")`. This will create a new node with label "Location"
 and properties in the `Map` - "id" and "name" in this case. This method call returns the Neo4j node ID of the newly created
 node.
 
@@ -403,7 +403,7 @@ With the caches explained, we will refine our node creating method to populate t
 ```java
 @Override
 public void processObject(Map<String, Object> object) {
-    locationCache.put((Long) object.get("id"), context.inserter().createNode(object, label("Location")));
+    locationCache.put((Long) object.get("id"), context.inserter().createNode(object, Label.label("Location")));
 }
 ```
 
@@ -443,7 +443,7 @@ public class PersonImporter extends TabularImporter<Person> {
             throw new RuntimeException("Person has empty name");
         }
 
-        personCache.put(person.getId(), context.inserter().createNode(person.getProperties(), label("Person")));
+        personCache.put(person.getId(), context.inserter().createNode(person.getProperties(), Label.label("Person")));
         context.inserter().createRelationship(personCache.get(person.getId()), locationCache.get(person.getLocation()), withName("LIVES_IN"), Collections.<String, Object>emptyMap());
     }
 
@@ -458,7 +458,7 @@ public class PersonImporter extends TabularImporter<Person> {
 
     @Override
     public void createIndices() {
-        createIndex(label("Person"), "name");
+        createIndex(Label.label("Person"), "name");
     }
 }
 ```

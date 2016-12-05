@@ -15,9 +15,9 @@
 
 package com.graphaware.importer.domain;
 
-import com.graphaware.common.util.Pair;
 import com.graphaware.importer.util.ReflectionUtils;
 import org.neo4j.graphdb.Node;
+import org.neo4j.helpers.collection.Pair;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -53,7 +53,7 @@ public abstract class Neo4jPropertyContainer {
             try {
                 Object value = fieldAndName.first().get(this);
                 if (value != null) {
-                    result.put(fieldAndName.second(), value);
+                    result.put(fieldAndName.other(), value);
                 }
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
@@ -77,7 +77,7 @@ public abstract class Neo4jPropertyContainer {
             }
 
             String fieldName = StringUtils.isEmpty(annotation.name()) ? field.getName() : annotation.name();
-            fieldsAndNames.add(new Pair<>(field, fieldName));
+            fieldsAndNames.add(Pair.of(field, fieldName));
             field.setAccessible(true);
         }
 

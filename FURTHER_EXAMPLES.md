@@ -5,7 +5,7 @@ This document showcases some further examples of reading data from alternate dat
 
 # MySQL Data Source
 
-#### `MySqlDataReader` Implementation
+### `MySqlDataReader` Implementation
 
 The following libraries are required for the `DataReader`.
 
@@ -57,7 +57,7 @@ public class MySqlDataReader extends QueueDbDataReader {
 }
 ```
 
-#### `MySqlImportConfig` Implementation
+### `MySqlImportConfig` Implementation
 
 The following libraries are required for the `ImportConfig`.
 
@@ -91,7 +91,7 @@ public class MySqlImportConfig extends DbImportConfig {
 }
 ```
 
-#### `MySqlCommandLineParser` Implementation
+### `MySqlCommandLineParser` Implementation
 
 The following libraries are required for the `CommandLineParser`.
 

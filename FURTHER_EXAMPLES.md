@@ -16,7 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 ```
 
-The class itself is similar to that of the Oracle example in [README.md](../README.md). `QueueDbDataReader` is still extended although the MySQL JDBC driver is alternatively used. Note that variable `db` is added to represent the name of the database. The variable `prefetchsize` found in the `OracleDataReader` example is defunct in a MySQL environment and is therefore not included.
+The class itself is similar to that of the Oracle example in [README.md](../master/README.md). `QueueDbDataReader` is still extended although the MySQL JDBC driver is alternatively used. Note that variable `db` is added to represent the name of the database. The variable `prefetchsize` found in the `OracleDataReader` example is defunct in a MySQL environment and is therefore not included.
 
 ```java
 public class MySqlDataReader extends QueueDbDataReader {

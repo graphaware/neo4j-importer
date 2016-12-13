@@ -15,6 +15,7 @@
 
 package com.graphaware.importer.importer;
 
+import com.graphaware.importer.cache.Cache;
 import com.graphaware.importer.cache.Caches;
 import com.graphaware.importer.context.ImportContext;
 import com.graphaware.importer.data.access.DataReader;
@@ -78,10 +79,20 @@ public abstract class BaseImporter<T, R extends DataReader> implements Importer 
 
         for (String cacheName : context.caches().createdCaches(this)) {
             createCache(context.caches(), cacheName);
+            initCache(context.caches().getCache(cacheName), cacheName);
         }
         context.caches().inject(this);
 
         collector = context.createStatistics(name());
+    }
+
+    /**
+     * Initialise a cache (pre-populate etc).
+     * @param cache to initialise.
+     * @param name of the cache to initialise.
+     */
+    protected void initCache(Cache cache, String name) {
+        //no-op by default
     }
 
     /**

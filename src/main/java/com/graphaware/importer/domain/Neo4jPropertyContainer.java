@@ -17,7 +17,7 @@ package com.graphaware.importer.domain;
 
 import com.graphaware.importer.util.ReflectionUtils;
 import org.neo4j.graphdb.Node;
-import org.neo4j.helpers.collection.Pair;
+import org.neo4j.helpers.Pair;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;

@@ -32,7 +32,7 @@ public class MapDBCache<K, V> implements Cache<K, V> {
     private final Map<K, V> map;
 
     public MapDBCache(DB db, String name, Serializer<K> keySerializer, Serializer<V> valueSerializer) {
-        map = db.createHashMap(name).keySerializer(keySerializer).valueSerializer(valueSerializer).make();
+        map = db.hashMap(name).keySerializer(keySerializer).valueSerializer(valueSerializer).create();
     }
 
     @Override

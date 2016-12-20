@@ -28,7 +28,15 @@ public class MapDBCaches extends BaseCaches {
     private final DB db;
 
     public MapDBCaches() {
-        db = DBMaker.newMemoryDirectDB().transactionDisable().make();
+        db = DBMaker
+                .tempFileDB()
+                .fileMmapEnable()
+                .fileMmapEnableIfSupported()
+                .fileMmapPreclearDisable()
+                .cleanerHackEnable()
+                .fileDeleteAfterClose()
+                .closeOnJvmShutdown()
+                .make();
     }
 
     /**
@@ -50,14 +58,6 @@ public class MapDBCaches extends BaseCaches {
      */
     protected MapDBCache doCreateCache(DB db, String cacheName, Class<?> keyType, Class<?> valueType) {
         return new MapDBCache(db, cacheName, getSerializer(keyType), getSerializer(valueType));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void compact() {
-        db.compact();
     }
 
     /**
@@ -101,6 +101,6 @@ public class MapDBCaches extends BaseCaches {
     protected Serializer<?> defaultSerializer(Class<?> type) {
         Assert.notNull(type);
 
-        return Serializer.BASIC;
+        return Serializer.JAVA;
     }
 }

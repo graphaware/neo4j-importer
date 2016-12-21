@@ -15,6 +15,7 @@
 
 package com.graphaware.importer.cache;
 
+import com.graphaware.importer.config.ImportConfig;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.Serializer;
@@ -27,9 +28,9 @@ public class MapDBCaches extends BaseCaches {
 
     private final DB db;
 
-    public MapDBCaches() {
+    public MapDBCaches(ImportConfig config) {
         db = DBMaker
-                .tempFileDB()
+                .fileDB(config.getCacheFile())
                 .fileMmapEnable()
                 .fileMmapEnableIfSupported()
                 .fileMmapPreclearDisable()

@@ -52,13 +52,15 @@ public abstract class BaseCommandLineParser<T extends ImportConfig> implements C
         String graphDir = getMandatoryValue(line, "g");
         String outputDir = getMandatoryValue(line, "o");
         String props = getMandatoryValue(line, "r");
+        String cacheFile = getMandatoryValue(line, "c");
 
         LOG.info("Producing import config:");
         LOG.info("\tGraph: " + graphDir);
         LOG.info("\tOutput: " + outputDir);
         LOG.info("\tProps: " + props);
+        LOG.info("\tCache File: " + cacheFile);
 
-        return doProduceConfig(line, graphDir, outputDir, props);
+        return doProduceConfig(line, graphDir, outputDir, props, cacheFile);
     }
 
     /**
@@ -71,7 +73,7 @@ public abstract class BaseCommandLineParser<T extends ImportConfig> implements C
      * @return import configuration.
      * @throws ParseException
      */
-    protected abstract T doProduceConfig(CommandLine line, String graphDir, String outputDir, String props) throws ParseException;
+    protected abstract T doProduceConfig(CommandLine line, String graphDir, String outputDir, String props, String cacheFile) throws ParseException;
 
     /**
      * Produce default/essential options.
@@ -83,6 +85,7 @@ public abstract class BaseCommandLineParser<T extends ImportConfig> implements C
         options.addOption(new Option("g", "graph", true, "use given directory to output the graph"));
         options.addOption(new Option("o", "output", true, "use given directory to output auxiliary files, such as statistics"));
         options.addOption(new Option("r", "properties", true, "use given file as neo4j properties"));
+        options.addOption(new Option("c", "cache file", true, "use given file as temporary cache on disk"));
 
         addOptions(options);
 

@@ -25,8 +25,8 @@ public abstract class DbImportConfig extends BaseImportConfig {
     private final String user;
     private final String password;
 
-    protected DbImportConfig(String graphDir, String outputDir, String props, String dbHost, String dbPort, String user, String password) {
-        super(graphDir, outputDir, props);
+    protected DbImportConfig(String graphDir, String outputDir, String props, String cacheFile, String dbHost, String dbPort, String user, String password) {
+        super(graphDir, outputDir, props, cacheFile);
         this.dbHost = dbHost;
         this.dbPort = dbPort;
         this.user = user;

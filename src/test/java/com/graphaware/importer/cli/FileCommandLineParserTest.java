@@ -39,6 +39,7 @@ public class FileCommandLineParserTest {
                 "-g", "/tmp/graph",
                 "-i", "/tmp/input",
                 "-o", "/tmp/output",
+                "-c", "/tmp/cache",
                 "-r", "neo4j.props"
         });
 
@@ -46,6 +47,7 @@ public class FileCommandLineParserTest {
         assertEquals("/tmp/graph", context.getGraphDir());
         assertEquals("/tmp/input", context.getInputDir());
         assertEquals("/tmp/output", context.getOutputDir());
+        assertEquals("/tmp/cache", context.getCacheFile());
         assertEquals("neo4j.props", context.getProps());
     }
 
@@ -55,6 +57,7 @@ public class FileCommandLineParserTest {
                 "-g", "/tmp/graph",
                 "-i", "/tmp/input",
                 "-o", "/tmp/output",
+                "-c", "/tmp/cache",
                 "-r", "neo4j.props",
                 "-m", "invalid"
         }));
@@ -65,6 +68,7 @@ public class FileCommandLineParserTest {
         assertNull(parser.parseArgs(new String[]{
                 "-i", "/tmp/input",
                 "-o", "/tmp/output",
+                "-c", "/tmp/cache",
                 "-p", "neo4j.props"
         }));
     }
@@ -74,6 +78,7 @@ public class FileCommandLineParserTest {
         assertNull(parser.parseArgs(new String[]{
                 "-g", "/tmp/graph",
                 "-o", "/tmp/output",
+                "-c", "/tmp/cache",
                 "-r", "neo4j.props"
         }));
     }
@@ -83,6 +88,7 @@ public class FileCommandLineParserTest {
         assertNull(parser.parseArgs(new String[]{
                 "-g", "/tmp/graph",
                 "-i", "/tmp/input",
+                "-c", "/tmp/cache",
                 "-r", "neo4j.props"
         }));
     }
@@ -92,6 +98,7 @@ public class FileCommandLineParserTest {
         assertNull(parser.parseArgs(new String[]{
                 "-g", "/tmp/graph",
                 "-i", "/tmp/input",
+                "-c", "/tmp/cache",
                 "-o", "/tmp/output"
         }));
     }

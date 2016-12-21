@@ -28,7 +28,7 @@ public class CsvCommandLineParser extends FileCommandLineParser<FileImportConfig
      * {@inheritDoc}
      */
     @Override
-    protected FileImportConfig doProduceConfig(CommandLine line, String graphDir, String outputDir, String props, String inputDir) {
-        return new CsvImportConfig(graphDir, outputDir, props, inputDir);
+    protected FileImportConfig doProduceConfig(CommandLine line, String graphDir, String outputDir, String props, String cacheFile, String inputDir) {
+        return new CsvImportConfig(graphDir, outputDir, props, cacheFile, inputDir);
     }
 }

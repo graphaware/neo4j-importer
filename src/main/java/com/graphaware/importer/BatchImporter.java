@@ -133,7 +133,7 @@ public abstract class BatchImporter<T extends ImportConfig> {
      * @return context.
      */
     protected ImportContext createContext(T config) {
-        return new SimpleImportContext(config, createCaches(), createInputDataLocator(config), createOutputDataLocator(config));
+        return new SimpleImportContext(config, createCaches(config), createInputDataLocator(config), createOutputDataLocator(config));
     }
 
     /**
@@ -141,8 +141,8 @@ public abstract class BatchImporter<T extends ImportConfig> {
      *
      * @return caches.
      */
-    protected Caches createCaches() {
-        return new MapDBCaches();
+    protected Caches createCaches(T config) {
+        return new MapDBCaches(config);
     }
 
     /**

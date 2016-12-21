@@ -15,6 +15,7 @@
 
 package com.graphaware.importer.config;
 
+import com.graphaware.importer.data.access.DataReader;
 import org.springframework.util.Assert;
 
 /**
@@ -25,6 +26,7 @@ public abstract class BaseImportConfig implements ImportConfig {
     private final String graphDir;
     private final String outputDir;
     private final String props;
+    private final String cacheFile;
 
     /**
      * Construct a new config.
@@ -32,15 +34,18 @@ public abstract class BaseImportConfig implements ImportConfig {
      * @param graphDir  directory where the database will be stored. Must not be <code>null</code> or empty.
      * @param outputDir directory where other files produced by the import will be stored. Must not be <code>null</code> or empty.
      * @param props     path to Neo4j properties used during the import. Must not be <code>null</code> or empty.
+     * @param cacheFile full path to file on disk that will be used as a cache.
      */
-    protected BaseImportConfig(String graphDir, String outputDir, String props) {
+    protected BaseImportConfig(String graphDir, String outputDir, String props, String cacheFile) {
         Assert.hasLength(graphDir);
         Assert.hasLength(outputDir);
         Assert.hasLength(props);
+        Assert.hasLength(cacheFile);
 
         this.graphDir = graphDir;
         this.outputDir = outputDir;
         this.props = props;
+        this.cacheFile = cacheFile;
     }
 
     /**
@@ -65,5 +70,13 @@ public abstract class BaseImportConfig implements ImportConfig {
     @Override
     public String getProps() {
         return props;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getCacheFile() {
+        return cacheFile;
     }
 }

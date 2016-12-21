@@ -43,4 +43,11 @@ public interface ImportConfig {
      * @return data reader.
      */
     DataReader createReader();
+
+    /**
+     * Get full path to the file on disk that will be used as cache.
+     *
+     * @return path to file.
+     */
+    String getCacheFile();
 }

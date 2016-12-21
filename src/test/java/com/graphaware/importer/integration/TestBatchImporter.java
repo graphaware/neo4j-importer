@@ -53,7 +53,7 @@ public class TestBatchImporter extends FileBatchImporter {
 
     @Override
     protected ImportContext createContext(FileImportConfig config) {
-        return new CacheAwareImportContext(config, createCaches(), createInputDataLocator(config), createOutputDataLocator(config), createCacheInputLocator(), createMapper());
+        return new CacheAwareImportContext(config, createCaches(config), createInputDataLocator(config), createOutputDataLocator(config), createCacheInputLocator(), createMapper());
     }
 
     private DataLocator createCacheInputLocator() {

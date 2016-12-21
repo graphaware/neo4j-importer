@@ -34,11 +34,11 @@ public abstract class FileCommandLineParser<T extends FileImportConfig> extends 
      * {@inheritDoc}
      */
     @Override
-    protected T doProduceConfig(CommandLine line, String graphDir, String outputDir, String props) throws ParseException {
+    protected T doProduceConfig(CommandLine line, String graphDir, String outputDir, String props, String cacheFile) throws ParseException {
         String inputDir = getMandatoryValue(line, "i");
         LOG.info("\tInput: " + inputDir);
 
-        return doProduceConfig(line, graphDir, outputDir, props, inputDir);
+        return doProduceConfig(line, graphDir, outputDir, props, cacheFile, inputDir);
     }
 
     /**
@@ -51,7 +51,7 @@ public abstract class FileCommandLineParser<T extends FileImportConfig> extends 
      * @param inputDir  directory for input files, already extracted from the command line.
      * @return import configuration.
      */
-    protected abstract T doProduceConfig(CommandLine line, String graphDir, String outputDir, String props, String inputDir);
+    protected abstract T doProduceConfig(CommandLine line, String graphDir, String outputDir, String props, String cacheFile, String inputDir);
 
     /**
      * {@inheritDoc}

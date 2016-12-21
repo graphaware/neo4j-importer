@@ -15,10 +15,12 @@
 
 package com.graphaware.importer.cache;
 
+import com.graphaware.importer.config.ImportConfig;
 import com.graphaware.importer.data.Data;
 import com.graphaware.importer.data.access.TabularDataReader;
 import com.graphaware.importer.importer.Importer;
 import com.graphaware.importer.importer.TabularImporter;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -27,26 +29,41 @@ import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit test for {@link com.graphaware.importer.cache.BaseCaches}.
  */
 public class CachesTest {
 
+    private ImportConfig config;
+
+    @Before
+    public void setUp() {
+        config = mock(ImportConfig.class);
+
+        when(config.getCacheFile()).thenReturn("/tmp/cache");
+    }
+
     @Test
     public void shouldCorrectlyReportNeededCaches() {
         TestImporter inserter = new TestImporter();
 
-        Set<String> neededCaches = new MapDBCaches().neededCaches(inserter);
+        MapDBCaches mapDBCaches = new MapDBCaches(config);
+
+        Set<String> neededCaches = mapDBCaches.neededCaches(inserter);
 
         assertEquals(2, neededCaches.size());
         assertTrue(neededCaches.contains("C1"));
         assertTrue(neededCaches.contains("C2"));
+
+        mapDBCaches.destroy();
     }
 
     @Test
     public void shouldInjectCaches() {
-        Caches caches = new MapDBCaches() {{
+        Caches caches = new MapDBCaches(config) {{
             createCache("C1", Long.class, Long.class);
             createCache("C2", String.class, Long.class);
         }};
@@ -60,11 +77,13 @@ public class CachesTest {
 
         assertEquals(c1, inserter.candidates);
         assertEquals(c2, inserter.companies);
+
+        caches.destroy();
     }
 
     @Test
     public void shouldClearUnusedCaches() {
-        Caches caches = new MapDBCaches() {{
+        Caches caches = new MapDBCaches(config) {{
             createCache("C1", Long.class, Long.class);
             createCache("C2", String.class, Long.class);
             createCache("C3", String.class, Long.class);
@@ -96,6 +115,8 @@ public class CachesTest {
         assertEquals(1, c1.size());
         assertEquals(1, c2.size());
         assertEquals(0, c3.size());
+
+        caches.destroy();
     }
 
     private class TestImporter extends TabularImporter<Object> {

@@ -19,12 +19,14 @@ import com.graphaware.importer.cache.Cache;
 import com.graphaware.importer.cache.Caches;
 import com.graphaware.importer.cache.InjectCache;
 import com.graphaware.importer.cache.MapDBCaches;
+import com.graphaware.importer.config.ImportConfig;
 import com.graphaware.importer.context.ImportContext;
 import com.graphaware.importer.data.Data;
 import com.graphaware.importer.data.DynamicData;
 import com.graphaware.importer.data.access.TabularDataReader;
 import com.graphaware.importer.importer.Importer;
 import com.graphaware.importer.importer.TabularImporter;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,12 +45,24 @@ import static org.mockito.Mockito.when;
 public class DefaultExecutionPlanTest {
 
     private ImportContext context;
+    private Caches caches;
 
     @Before
     public void setUp() {
-        Caches caches = new MapDBCaches();
+        ImportConfig config = mock(ImportConfig.class);
+
+        when(config.getCacheFile()).thenReturn("/tmp/cache");
+
+        caches = new MapDBCaches(config);
         context = mock(ImportContext.class);
         when(context.caches()).thenReturn(caches);
+    }
+
+    @After
+    public void tearDown() {
+        if (caches != null) {
+            caches.destroy();
+        }
     }
 
     private Set<Importer> importers(Importer... importers) {

@@ -34,7 +34,7 @@ public abstract class DbCommandLineParser extends BaseCommandLineParser<DbImport
      * {@inheritDoc}
      */
     @Override
-    protected DbImportConfig doProduceConfig(CommandLine line, String graphDir, String outputDir, String props) throws ParseException {
+    protected DbImportConfig doProduceConfig(CommandLine line, String graphDir, String outputDir, String props, String cacheFile) throws ParseException {
         String host = getMandatoryValue(line, "h");
         String port = getMandatoryValue(line, "t");
         String user = getMandatoryValue(line, "u");
@@ -45,7 +45,7 @@ public abstract class DbCommandLineParser extends BaseCommandLineParser<DbImport
         LOG.info("\tUsername:" + user);
         LOG.info("\tPassword: **********");
 
-        return doProduceConfig(line, graphDir, outputDir, props, host, port, user, password);
+        return doProduceConfig(line, graphDir, outputDir, props, cacheFile, host, port, user, password);
     }
 
     /**
@@ -62,7 +62,7 @@ public abstract class DbCommandLineParser extends BaseCommandLineParser<DbImport
      * @return import configuration.
      * @throws ParseException
      */
-    protected abstract DbImportConfig doProduceConfig(CommandLine line, String graphDir, String outputDir, String props, String host, String port, String user, String password) throws ParseException;
+    protected abstract DbImportConfig doProduceConfig(CommandLine line, String graphDir, String outputDir, String props, String cacheFile, String host, String port, String user, String password) throws ParseException;
 
     /**
      * {@inheritDoc}

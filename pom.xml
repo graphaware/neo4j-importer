@@ -23,7 +23,7 @@
     </parent>
 
     <artifactId>programmatic-importer</artifactId>
-    <version>2.3.3.37.4-BETA-SNAPSHOT</version>
+    <version>2.3.3.37.3-SNAPSHOT</version>
 
     <name>GraphAware Programmatic Neo4j Importer</name>
     <description>Importer high-performance multi-threaded initial data load into Neo4j from CSV/SQL with custom logic</description>
@@ -133,6 +133,12 @@
             <groupId>org.mapdb</groupId>
             <artifactId>mapdb</artifactId>
             <version>3.0.2</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
             <scope>compile</scope>
         </dependency>
 

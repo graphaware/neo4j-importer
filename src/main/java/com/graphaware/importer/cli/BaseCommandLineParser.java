@@ -85,7 +85,7 @@ public abstract class BaseCommandLineParser<T extends ImportConfig> implements C
         options.addOption(new Option("g", "graph", true, "use given directory to output the graph"));
         options.addOption(new Option("o", "output", true, "use given directory to output auxiliary files, such as statistics"));
         options.addOption(new Option("r", "properties", true, "use given file as neo4j properties"));
-        options.addOption(new Option("c", "cache file", true, "use given file as temporary cache on disk"));
+        options.addOption(new Option("c", "cachefile", true, "use given file as temporary cache on disk"));
 
         addOptions(options);
 

@@ -1,7 +1,8 @@
 GraphAware Neo4j Importer
 =========================
 
-## Importer Has Been Retired
+Importer Has Been Retired
+-------------------------
 
 As of April 1st 2017, this module is retiring in favour of [GraphAware Databridge](https://neo4j.com/blog/graphaware-databridge-graph-data-import/). This means it will no longer be maintained and released together with new versions of the GraphAware Framework and Neo4j. The last compatible Neo4j version is 3.1.0.
 

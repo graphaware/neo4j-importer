@@ -8,6 +8,9 @@ As of April 1st 2017, this module is retiring in favour of [GraphAware Databridg
 
 This repository will remain public.
 
+Introduction
+============
+
 [![Build Status](https://travis-ci.org/graphaware/neo4j-importer.png)](https://travis-ci.org/graphaware/neo4j-importer) | <a href="http://graphaware.com/products/" target="_blank">Products</a> | Latest Release: 3.1.0.44.3
 
 GraphAware Importer is a high-performance importer for importing data from any data source to Neo4j. It is intended

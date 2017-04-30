@@ -74,6 +74,7 @@ public class SimpleImportContext extends BaseImportContext {
         List<DataReader> result = new LinkedList<>();
         String[] locations = locate(data);
         for (String location : locations) {
+            LOG.info("Reading " + location);
             DataReader dataReader = doCreateReader(data);
             dataReader.initialize();
             dataReader.read(location, data.name());

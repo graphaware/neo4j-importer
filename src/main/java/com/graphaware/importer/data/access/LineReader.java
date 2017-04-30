@@ -16,6 +16,7 @@
 package com.graphaware.importer.data.access;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
 
 import java.io.File;
 import java.util.Iterator;
@@ -25,7 +26,7 @@ import java.util.Iterator;
  */
 public class LineReader implements DataReader<String> {
 
-    private Iterator<String> records;
+    private LineIterator records;
     private String record;
     private int counter = 0;
 
@@ -44,7 +45,7 @@ public class LineReader implements DataReader<String> {
         }
 
         try {
-            records = FileUtils.readLines(new File(connectionString)).iterator();
+            records = FileUtils.lineIterator(new File(connectionString));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -55,6 +56,9 @@ public class LineReader implements DataReader<String> {
      */
     @Override
     public void close() {
+        if (records != null) {
+            LineIterator.closeQuietly(records);
+        }
         records = null;
         record = null;
         counter = 0;

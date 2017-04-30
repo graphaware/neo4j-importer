@@ -112,24 +112,26 @@ public abstract class BaseImporter<T, R extends DataReader> implements Importer 
         }
 
         try {
-            R reader = (R) context.createReader(inputData());
+            R[] readers = (R[]) context.createReaders(inputData());
 
-            if (reader == null) {
-                LOG.warn("Could not create reader for " + inputData());
+            if (readers == null) {
+                LOG.warn("Could not create readers for " + inputData());
                 return;
             }
 
             LOG.info("Populating " + inputData() + "...");
 
-            while (reader.readRecord()) {
-                if (reader.getRow() % loggingInterval() == 0) {
-                    LOG.info("Imported " + reader.getRow() + " records. (" + name() + ")");
+            for (R reader : readers) {
+                while (reader.readRecord()) {
+                    if (reader.getRow() % loggingInterval() == 0) {
+                        LOG.info("Imported " + reader.getRow() + " records. (" + name() + ")");
+                    }
+
+                    processSingleRow(reader);
                 }
 
-                processSingleRow(reader);
+                reader.close();
             }
-
-            reader.close();
 
             executor.shutdown();
             try {

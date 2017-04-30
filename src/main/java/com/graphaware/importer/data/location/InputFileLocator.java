@@ -59,10 +59,11 @@ public class InputFileLocator extends FileLocator {
         boolean valid = true;
 
         for (Data data : allData()) {
-            String file = locate(data);
-            if (!new File(file).exists()) {
-                LOG.error("File does not exist: " + file);
-                valid = false;
+            for (String file : locate(data)) {
+                if (!new File(file).exists()) {
+                    LOG.error("File does not exist: " + file);
+                    valid = false;
+                }
             }
         }
 

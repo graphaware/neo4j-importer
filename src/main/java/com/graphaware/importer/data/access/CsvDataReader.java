@@ -57,15 +57,18 @@ public class CsvDataReader extends BaseTabularDataReader {
 
         try {
             in = new FileReader(connectionString);
-            records = CSVFormat.DEFAULT
-                    .withDelimiter(delimiter)
-                    .withQuote(quote)
-                    .withHeader()
-                    .parse(in).iterator();
+            records = getCsvFormat(delimiter, quote).parse(in).iterator();
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected CSVFormat getCsvFormat(char delimiter, char quote) {
+        return CSVFormat.DEFAULT
+                .withDelimiter(delimiter)
+                .withQuote(quote)
+                .withHeader();
     }
 
     /**
@@ -125,5 +128,9 @@ public class CsvDataReader extends BaseTabularDataReader {
     @Override
     public String getRawRecord() {
         return record.toString();
+    }
+
+    public String getValue(int index) {
+        return record.get(index);
     }
 }

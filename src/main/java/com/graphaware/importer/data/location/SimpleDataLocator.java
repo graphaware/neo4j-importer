@@ -74,7 +74,7 @@ public class SimpleDataLocator implements DataLocator {
      * {@inheritDoc}
      */
     @Override
-    public String locate(Data data) {
+    public String[] locate(Data data) {
         LOG.info("Locating " + data + "...");
 
         if (!canLocate(data)) {
@@ -82,6 +82,6 @@ public class SimpleDataLocator implements DataLocator {
             throw new IllegalStateException("Cannot locate " + data);
         }
 
-        return this.locations.get(data);
+        return new String[]{this.locations.get(data)};
     }
 }

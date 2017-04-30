@@ -70,7 +70,7 @@ public class CacheAwareImportContext extends SimpleImportContext {
      * {@inheritDoc}
      */
     @Override
-    protected String locate(Data data) {
+    protected String[] locate(Data data) {
         if (cacheInputLocator.canLocate(data)) {
             return cacheInputLocator.locate(data);
         }

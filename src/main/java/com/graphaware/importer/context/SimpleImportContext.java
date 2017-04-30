@@ -27,6 +27,8 @@ import org.springframework.util.Assert;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Simplest usable {@link com.graphaware.importer.context.ImportContext} that is aware of caches and I/O.
@@ -66,13 +68,19 @@ public class SimpleImportContext extends BaseImportContext {
      * {@inheritDoc}
      */
     @Override
-    public final DataReader createReader(Data data) {
+    public final DataReader[] createReaders(Data data) {
         Assert.notNull(data);
 
-        DataReader dataReader = doCreateReader(data);
-        dataReader.initialize();
-        dataReader.read(locate(data), data.name());
-        return dataReader;
+        List<DataReader> result = new LinkedList<>();
+        String[] locations = locate(data);
+        for (String location : locations) {
+            DataReader dataReader = doCreateReader(data);
+            dataReader.initialize();
+            dataReader.read(location, data.name());
+            result.add(dataReader);
+        }
+
+        return result.toArray(new DataReader[result.size()]);
     }
 
     /**
@@ -91,7 +99,7 @@ public class SimpleImportContext extends BaseImportContext {
      * @param data to locate.
      * @return logical data location.
      */
-    protected String locate(Data data) {
+    protected String[] locate(Data data) {
         return inputLocator.locate(data);
     }
 

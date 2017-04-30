@@ -48,11 +48,11 @@ public interface DataLocator {
     boolean canLocate(Data data);
 
     /**
-     * Locate the given data. Depending on the implementation, the location could be a file name, an SQL query, etc.
+     * Locate the given data. Depending on the implementation, the location could be a file names, SQL queries, etc.
      *
      * @param data to locate.
-     * @return data location.
+     * @return data locations.
      * @throws java.lang.IllegalStateException iff {@link #canLocate(com.graphaware.importer.data.Data)} returns <code>false</code>.
      */
-    String locate(Data data);
+    String[] locate(Data data);
 }

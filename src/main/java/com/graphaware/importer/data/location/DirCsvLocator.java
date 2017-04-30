@@ -19,27 +19,23 @@ import com.graphaware.importer.data.Data;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
- * A {@link DataLocator} that translates data locations to absolute paths to files.
+ * A {@link DataLocator} that translates data locations to absolute paths to leaf files within directories.
  */
-public class FileLocator extends SimpleDataLocator {
-
-    private final String dir;
+public class DirCsvLocator extends SimpleDataLocator {
 
     /**
      * Construct a new locator.
      *
-     * @param dir       directory in which to locate files.
-     * @param fileNames map of data to logical file names (i.e. without suffix).
+     * @param dirNames map of data to logical file names (i.e. without suffix).
      */
-    public FileLocator(String dir, Map<Data, String> fileNames) {
-        super(fileNames);
-        this.dir = dir;
+    public DirCsvLocator(Map<Data, String> dirNames) {
+        super(dirNames);
     }
 
     /**
@@ -51,15 +47,10 @@ public class FileLocator extends SimpleDataLocator {
     public String[] locate(Data data) {
         String[] locations = super.locate(data);
 
-        try {
-            FileUtils.forceMkdir(new File(dir));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
         List<String> result = new LinkedList<>();
+
         for (String location : locations) {
-            result.add(new File(dir + File.separator + location + suffix()).getAbsolutePath());
+            result.addAll(FileUtils.listFiles(new File(location), new String[]{suffix()}, true).stream().map(File::getAbsolutePath).collect(Collectors.toList()));
         }
 
         return result.toArray(new String[result.size()]);
@@ -71,6 +62,6 @@ public class FileLocator extends SimpleDataLocator {
      * @return suffix. ".csv" by default.
      */
     protected String suffix() {
-        return ".csv";
+        return "csv";
     }
 }

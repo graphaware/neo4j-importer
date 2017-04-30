@@ -38,7 +38,7 @@ public interface ImportConfig {
     String getProps();
 
     /**
-     * Get the data reader that will provide data for this import.
+     * Get the data readers that will provide data for this import.
      *
      * @return data reader.
      */

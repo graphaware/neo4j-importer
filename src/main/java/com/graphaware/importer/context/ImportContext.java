@@ -75,12 +75,12 @@ public interface ImportContext {
     BatchInserterIndexProvider indexProvider();
 
     /**
-     * Create a reader for the given data.
+     * Create readers for the given data.
      *
-     * @param data for which to create a reader. Must not be <code>null</code>.
-     * @return data reader. Null if no data reader for given input data can be created.
+     * @param data for which to create readers. Must not be <code>null</code>.
+     * @return data readers. Null if no data reader for given input data can be created.
      */
-    DataReader createReader(Data data);
+    DataReader[] createReaders(Data data);
 
     /**
      * Shutdown the context after import has finished.
